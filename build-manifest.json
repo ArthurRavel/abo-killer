@@ -1,0 +1,8 @@
+{
+  "generatedBy": "scripts/build.mjs",
+  "entrypoints": {
+    "html": "index.html",
+    "css": "assets/styles-be7d044d76.css",
+    "javascript": "assets/main-ef1a60c654.js"
+  }
+}
