@@ -37,7 +37,7 @@ test("handles semicolon-delimited European decimals and quoted commas", async ()
 });
 
 test("parses adversarial European CSV quoting, BOM, CRLF, and embedded delimiters", async () => {
-  const text = await fixture("european-adversarial.csv");
+  const text = (await fixture("european-adversarial.csv")).replaceAll("\n", "\r\n");
   const parsed = parseCsv(text);
   assert.equal(parsed.delimiter, ";");
   assert.equal(parsed.headers[0], "Booking date");
