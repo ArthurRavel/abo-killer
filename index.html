@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Find recurring subscriptions in European bank CSV exports. Your financial data stays in your browser."
+    />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; connect-src 'none'; img-src 'self' data:; style-src 'self'; script-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'"
+    />
+    <meta name="theme-color" content="#111827" />
+    <title>Abo Killer — find the quiet drain</title>
+    <link rel="stylesheet" href="./src/styles.css" />
+  </head>
+  <body>
+    <a class="skip-link" href="#app">Skip to the app</a>
+    <header class="site-header">
+      <a class="brand" href="./" aria-label="Abo Killer home">
+        <span class="brand-mark" aria-hidden="true">AK</span>
+        <span>Abo Killer</span>
+      </a>
+      <div class="privacy-pill"><span aria-hidden="true"></span> Offline by design</div>
+    </header>
+    <main id="app" tabindex="-1"></main>
+    <footer class="site-footer">
+      <p>Runs entirely in this tab. No uploads, accounts, analytics, or exchange-rate guesses.</p>
+      <a href="https://github.com/ArthurRavel/abo-killer" target="_blank" rel="noreferrer noopener">Source on GitHub</a>
+    </footer>
+    <div id="announcer" class="sr-only" aria-live="polite"></div>
+    <script type="module" src="./src/main.js"></script>
+  </body>
+</html>

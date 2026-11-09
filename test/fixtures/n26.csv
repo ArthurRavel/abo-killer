@@ -1,0 +1,4 @@
+Date,Payee,Account number,Transaction type,Payment reference,Category,Amount (EUR),Amount (Foreign Currency),Type Foreign Currency,Exchange Rate
+2025-01-03,SPOTIFY AB,,Mastercard,Premium plan,Media,-10.99,,,
+2025-02-03,PAYPAL *SPOTIFY 7782,,Mastercard,Premium plan,Media,-10.99,,,
+2025-03-03,SPOTIFY AB 482993,,Mastercard,Premium plan,Media,-10.99,,,
