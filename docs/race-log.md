@@ -53,3 +53,12 @@ Context check: [subzero](https://github.com/Sumama-Jameel/subzero) 2, [refund-ra
 ### Next
 
 Add adversarial CSV fixtures from more documented bank export shapes, then perform browser-level keyboard and mobile layout QA before the repository becomes public.
+
+
+## Public launch — 2026-11-09 22:38 Europe/Paris
+
+- Repository: https://github.com/ArthurRavel/abo-killer — **0 stars**, 0 forks, 0 open issues at verification.
+- Live app: https://arthurravel.github.io/abo-killer/ — HTTP 200 verified.
+- Opponent: https://github.com/ArthurRavel/rewindary — **0 stars** at verification.
+- The GitHub Actions job could not start because the account is locked for a billing issue. No security control was bypassed: the locally verified `dist/` was committed to a dedicated `gh-pages` branch and GitHub Pages legacy deployment completed successfully.
+- Future commits use the verified GitHub noreply identity. Published history was not rewritten.
