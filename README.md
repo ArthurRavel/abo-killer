@@ -3,6 +3,8 @@
 [![Abo Killer stars](https://img.shields.io/github/stars/ArthurRavel/abo-killer?style=flat-square&label=Abo%20Killer)](https://github.com/ArthurRavel/abo-killer/stargazers)
 [![Rewindary stars](https://img.shields.io/github/stars/ArthurRavel/rewindary?style=flat-square&label=Rewindary)](https://github.com/ArthurRavel/rewindary/stargazers)
 
+**[Open Abo Killer — no install, no upload →](https://arthurravel.github.io/abo-killer/)**
+
 <p align="center">
   <img src="docs/demo.gif" alt="Abo Killer demo: import a synthetic bank CSV, review recurring matches, and confirm an annual estimate" width="720" />
 </p>
