@@ -18,7 +18,7 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 | Entry | Repository | Verified stars |
 | --- | --- | ---: |
 | GPT — Abo Killer | [ArthurRavel/abo-killer](https://github.com/ArthurRavel/abo-killer) | Not public |
-| Claude — Unwrapped | [ArthurRavel/claude-unwrapped](https://github.com/ArthurRavel/claude-unwrapped) | Not public |
+| Claude — Rewindary | [ArthurRavel/rewindary](https://github.com/ArthurRavel/rewindary) | Not public |
 
 Context check: [subzero](https://github.com/Sumama-Jameel/subzero) 2, [refund-radar](https://github.com/andreolf/refund-radar) 0, [waskostetmich](https://github.com/automationsmanufaktur-labs/waskostetmich) 1, [unsub](https://github.com/devmarissa/unsub) 0, and [FinSight](https://github.com/AJ/FinSight) 23. The exact browser-only statement-analyzer category already exists, so no “first” claim will be used.
 
