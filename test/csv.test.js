@@ -36,6 +36,19 @@ test("handles semicolon-delimited European decimals and quoted commas", async ()
   assert.equal(result.transactions[2].amount, -10.99);
 });
 
+test("parses adversarial European CSV quoting, BOM, CRLF, and embedded delimiters", async () => {
+  const text = await fixture("european-adversarial.csv");
+  const parsed = parseCsv(text);
+  assert.equal(parsed.delimiter, ";");
+  assert.equal(parsed.headers[0], "Booking date");
+  assert.equal(parsed.rows.length, 3);
+  assert.equal(parsed.rows[0].Details, "CAFÉ; VIDEO, PLUS");
+  assert.equal(parsed.rows[1].Details, "L'ATELIER \"NORD\"");
+  assert.equal(parsed.rows[2].Details, "ACME\r\nEUROPE");
+  assert.equal(parsed.rows[2].Value, "(1.234,56 €)");
+  assert.equal(parseAmount(parsed.rows[2].Value), -1234.56);
+});
+
 test("parses common European and international amount formats", () => {
   assert.equal(parseAmount("-1.234,56 €"), -1234.56);
   assert.equal(parseAmount("(1,234.56)"), -1234.56);
@@ -44,4 +57,7 @@ test("parses common European and international amount formats", () => {
 
 test("rejects malformed quoted input", () => {
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,"broken,-4'), /quoted field/);
+  assert.throws(() => parseCsv('date,description,amount\n2025-01-01,broken"text,-4'), /quoted field must start/);
+  assert.throws(() => parseCsv('date,description,amount\n2025-01-01,"broken"text,-4'), /after a closing quote/);
+  assert.throws(() => parseCsv('date,description,amount\n2025-01-01,too,few,columns'), /row 2 has 4 columns; expected 3/);
 });

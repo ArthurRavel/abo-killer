@@ -80,6 +80,7 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
   let row = [];
   let field = "";
   let quoted = false;
+  let closedQuote = false;
 
   for (let index = 0; index < input.length; index += 1) {
     const char = input[index];
@@ -87,18 +88,36 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
       if (char === '"' && input[index + 1] === '"') {
         field += '"';
         index += 1;
-      } else if (char === '"') quoted = false;
-      else field += char;
-    } else if (char === '"') quoted = true;
-    else if (char === delimiter) {
+      } else if (char === '"') {
+        quoted = false;
+        closedQuote = true;
+      } else field += char;
+    } else if (closedQuote && char !== delimiter && char !== "\n" && char !== "\r") {
+      throw new Error("Unexpected text after a closing quote.");
+    } else if (char === '"') {
+      if (field.length) throw new Error("A quoted field must start with a quote.");
+      quoted = true;
+    } else if (char === delimiter) {
       row.push(field.trim());
       field = "";
+      closedQuote = false;
     } else if (char === "\n") {
       row.push(field.trim());
       if (row.some(Boolean)) rows.push(row);
       row = [];
       field = "";
-    } else if (char !== "\r") field += char;
+      closedQuote = false;
+    } else if (char === "\r") {
+      if (input[index + 1] === "\n") index += 1;
+      row.push(field.trim());
+      if (row.some(Boolean)) rows.push(row);
+      row = [];
+      field = "";
+      closedQuote = false;
+    } else {
+      field += char;
+      closedQuote = false;
+    }
   }
 
   if (quoted) throw new Error("The CSV ends inside a quoted field.");
@@ -109,6 +128,8 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
   const [headers, ...data] = rows;
   const uniqueHeaders = new Set(headers.map((header) => header.toLowerCase()));
   if (uniqueHeaders.size !== headers.length) throw new Error("The CSV has duplicate column names.");
+  const invalidRow = data.findIndex((values) => values.length !== headers.length);
+  if (invalidRow >= 0) throw new Error(`CSV row ${invalidRow + 2} has ${data[invalidRow].length} columns; expected ${headers.length}.`);
 
   return {
     delimiter,

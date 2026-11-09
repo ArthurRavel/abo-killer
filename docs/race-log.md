@@ -4,6 +4,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-09
 
+### CSV correctness hardening — 21:38 Europe/Paris
+
+- Fixed the CSV parser accepting quote characters inside unquoted fields and arbitrary text after a closing quote. Both cases could silently change a merchant value while leaving the row apparently valid.
+- Added strict row-width validation so missing or extra cells stop the import instead of being padded or ignored.
+- Added a synthetic European fixture with a UTF-8 BOM, CRLF records, semicolon delimiter, delimiters inside quoted merchant names, escaped quotes, an embedded line break, and a parenthesized European amount. Added rejection checks for malformed quoting and inconsistent row widths.
+- Verification: all 15 `node --test` cases pass; production build succeeds; network-silence scan passes across eight production files.
+- The `npm run verify` wrapper could not run because npm is absent in this environment. Its three configured commands were run directly and passed. Browser-level QA was unavailable because no browser binary or browser automation package is installed; this parser-only change did not alter the interface.
+- No real statements or personal data were used. Nothing was pushed or published.
+
 ### Score check — 16:36 Europe/Paris
 
 | Entry | Repository | Verified stars |
