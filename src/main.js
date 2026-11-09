@@ -32,6 +32,17 @@ function announce(message) {
   window.setTimeout(() => { announcer.textContent = message; }, 20);
 }
 
+function focusView(selector = ".view-heading") {
+  window.requestAnimationFrame(() => {
+    document.querySelector(selector)?.focus({ preventScroll: true });
+  });
+}
+
+function scrollToTop() {
+  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  window.scrollTo({ top: 0, behavior: reduceMotion ? "auto" : "smooth" });
+}
+
 function formatMoney(amount, currency) {
   try {
     return new Intl.NumberFormat("en", { style: "currency", currency }).format(amount);
@@ -41,35 +52,39 @@ function formatMoney(amount, currency) {
 }
 
 function progress(active) {
-  const steps = ["Review transactions", "Review matches", "Your summary"];
+  const steps = [
+    { label: "Review transactions", shortLabel: "Import" },
+    { label: "Review matches", shortLabel: "Matches" },
+    { label: "Your summary", shortLabel: "Summary" },
+  ];
   return `<nav class="progress" aria-label="Analysis progress">
-    ${steps.map((label, index) => {
+    ${steps.map(({ label, shortLabel }, index) => {
       const position = index + 1;
       const className = position === active ? "active" : position < active ? "done" : "";
       const number = position < active ? "✓" : position;
       return `<div class="progress-item ${className}" ${position === active ? 'aria-current="step"' : ""}>
-        <span aria-hidden="true">${number}</span>${label}
+        <span class="step-number" aria-hidden="true">${number}</span>
+        <span class="step-label"><span class="step-label-full">${label}</span><span class="step-label-short">${shortLabel}</span></span>
       </div>`;
     }).join("")}
   </nav>`;
 }
 
-function renderLanding() {
+function renderLanding({ focusHeading = false } = {}) {
   state.phase = "landing";
   app.innerHTML = `<section class="hero">
     <div class="hero-copy">
-      <p class="eyebrow">Subscription detection, without surveillance</p>
-      <h1>Find the <span class="strike">quiet drain.</span></h1>
+      <h1 class="view-heading" tabindex="-1">Find the <span class="strike">quiet drain.</span></h1>
       <p>Drop in a European bank CSV. Abo Killer finds recurring charges, shows its evidence, and lets you decide what counts—before revealing a total.</p>
-      <div class="proof-row" aria-label="Product guarantees">
-        <span>Zero uploads</span><span>Explainable matches</span><span>No account needed</span><span>Open source</span>
-      </div>
+      <ul class="proof-row" aria-label="Product guarantees">
+        <li>Zero uploads</li><li>Explainable matches</li><li>No account needed</li><li>Open source</li>
+      </ul>
     </div>
     <div class="drop-card">
       <div class="drop-zone" id="drop-zone">
-        <div class="upload-icon" aria-hidden="true">↓</div>
+        <div class="upload-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3v12m0 0 4.5-4.5M12 15l-4.5-4.5M5 20h14" /></svg></div>
         <strong>Drop your CSV here</strong>
-        <p>N26, Revolut, and Wise exports are recognized. Any other CSV opens a transparent column mapper.</p>
+        <p>Your file stays in this tab. N26, Revolut, Wise, and other CSVs are supported.</p>
         <div class="button-row">
           <button class="button primary" id="choose-file" type="button">Choose CSV</button>
           <button class="button secondary light" id="use-demo" type="button">Try synthetic demo</button>
@@ -79,6 +94,7 @@ function renderLanding() {
     </div>
   </section>`;
   bindLanding();
+  if (focusHeading) focusView();
 }
 
 function bindLanding() {
@@ -128,7 +144,7 @@ function loadCsv(text, filename) {
     state.mapping = { ...mapping };
     applyMapping();
     state.phase = "transactions";
-    renderTransactionReview();
+    renderTransactionReview({ focusHeading: true });
     announce(`${state.transactions.length} transactions loaded for review.`);
   } catch (error) {
     renderError("Could not parse that CSV", error.message);
@@ -163,13 +179,13 @@ function mappingFields() {
     </div>`;
 }
 
-function renderTransactionReview() {
+function renderTransactionReview({ focusHeading = false, focusMap = "" } = {}) {
   const preview = state.transactions.slice(0, 18);
   app.innerHTML = `<section class="workspace">
     ${progress(1)}
     <div class="panel">
       <header class="panel-head">
-        <div><p class="step-kicker">Step 1 of 3</p><h2>Check the import</h2><p>Nothing is counted yet. Exclude anything that was parsed incorrectly.</p></div>
+        <div><p class="step-kicker">Step 1 of 3</p><h2 class="view-heading" tabindex="-1">Check the import</h2><p>Nothing is counted yet. Exclude anything that was parsed incorrectly.</p></div>
         <div class="file-chip">${escapeHtml(state.filename)}</div>
       </header>
       <div class="panel-body">
@@ -178,7 +194,7 @@ function renderTransactionReview() {
         ${preview.length ? `<div class="table-wrap"><table>
           <thead><tr><th><span class="sr-only">Include</span></th><th>Date</th><th>Description</th><th>Currency</th><th class="amount">Amount</th></tr></thead>
           <tbody>${preview.map((transaction) => `<tr>
-            <td><input class="check transaction-toggle" type="checkbox" data-id="${escapeHtml(transaction.id)}" ${state.selectedTransactions.has(transaction.id) ? "checked" : ""} aria-label="Include row ${transaction.sourceRow}" /></td>
+            <td><label class="check-control"><input class="check transaction-toggle" type="checkbox" data-id="${escapeHtml(transaction.id)}" ${state.selectedTransactions.has(transaction.id) ? "checked" : ""} aria-label="Include row ${transaction.sourceRow}" /></label></td>
             <td>${escapeHtml(transaction.date)}</td><td>${escapeHtml(transaction.description)}</td><td>${escapeHtml(transaction.currency)}</td>
             <td class="amount ${transaction.amount > 0 ? "positive" : ""}">${escapeHtml(formatMoney(transaction.amount, transaction.currency))}</td>
           </tr>`).join("")}</tbody>
@@ -186,11 +202,13 @@ function renderTransactionReview() {
       </div>
       <footer class="panel-actions">
         <p><strong id="selected-count">${state.selectedTransactions.size}</strong> parsed rows selected · analysis happens in memory</p>
-        <div class="button-row"><button class="button secondary" id="start-over" type="button">Start over</button><button class="button primary" id="analyze" type="button" ${state.selectedTransactions.size ? "" : "disabled"}>Find recurring charges →</button></div>
+        <div class="button-row"><button class="button secondary" id="start-over" type="button">Start over</button><button class="button primary" id="analyze" type="button" ${state.selectedTransactions.size ? "" : "disabled"}>Find recurring charges</button></div>
       </footer>
     </div>
   </section>`;
   bindTransactionReview();
+  if (focusMap) focusView(`[data-map="${focusMap}"]`);
+  else if (focusHeading) focusView();
 }
 
 function bindTransactionReview() {
@@ -199,7 +217,7 @@ function bindTransactionReview() {
     state.mapping[field] = select.value;
     if (field === "currency") state.mapping.fixedCurrency = select.value ? "" : "EUR";
     applyMapping();
-    renderTransactionReview();
+    renderTransactionReview({ focusMap: field });
   }));
   document.querySelectorAll(".transaction-toggle").forEach((checkbox) => checkbox.addEventListener("change", () => {
     if (checkbox.checked) state.selectedTransactions.add(checkbox.dataset.id);
@@ -213,18 +231,18 @@ function bindTransactionReview() {
     state.candidates = detectRecurring(selected);
     state.selectedCandidates = new Set(state.candidates.map(({ id }) => id));
     state.phase = "candidates";
-    renderCandidateReview();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    renderCandidateReview({ focusHeading: true });
+    scrollToTop();
     announce(`${state.candidates.length} recurring candidates found. Review them before totals are shown.`);
   });
 }
 
-function renderCandidateReview() {
+function renderCandidateReview({ focusHeading = false } = {}) {
   app.innerHTML = `<section class="workspace">
     ${progress(2)}
     <div class="panel">
       <header class="panel-head">
-        <div><p class="step-kicker">Step 2 of 3</p><h2>${state.candidates.length ? `Review ${state.candidates.length} possible recurring charge${state.candidates.length === 1 ? "" : "s"}` : "No recurring pattern found"}</h2>
+        <div><p class="step-kicker">Step 2 of 3</p><h2 class="view-heading" tabindex="-1">${state.candidates.length ? `Review ${state.candidates.length} possible recurring charge${state.candidates.length === 1 ? "" : "s"}` : "No recurring pattern found"}</h2>
           <p>${state.candidates.length ? "The detector proposes; you decide. Totals stay hidden until you confirm." : "No merchant met the cadence and confidence rules in the selected rows."}</p></div>
         <div class="file-chip">Deterministic results</div>
       </header>
@@ -234,16 +252,17 @@ function renderCandidateReview() {
       </div>
       <footer class="panel-actions">
         <p>${state.candidates.length ? `<strong id="candidate-count">${state.selectedCandidates.size}</strong> candidates selected` : "Try a longer date range or adjust the imported rows."}</p>
-        <div class="button-row"><button class="button secondary" id="back-to-rows" type="button">← Back</button>${state.candidates.length ? `<button class="button primary" id="confirm" type="button">Confirm & calculate →</button>` : `<button class="button primary" id="start-over" type="button">Import another CSV</button>`}</div>
+        <div class="button-row"><button class="button secondary" id="back-to-rows" type="button">Back</button>${state.candidates.length ? `<button class="button primary" id="confirm" type="button">Confirm & calculate</button>` : `<button class="button primary" id="start-over" type="button">Import another CSV</button>`}</div>
       </footer>
     </div>
   </section>`;
   bindCandidateReview();
+  if (focusHeading) focusView();
 }
 
 function candidateCard(candidate) {
   return `<article class="candidate">
-    <input class="candidate-toggle" type="checkbox" data-id="${escapeHtml(candidate.id)}" ${state.selectedCandidates.has(candidate.id) ? "checked" : ""} aria-label="Include ${escapeHtml(candidate.name)}" />
+    <label class="check-control candidate-check"><input class="candidate-toggle" type="checkbox" data-id="${escapeHtml(candidate.id)}" ${state.selectedCandidates.has(candidate.id) ? "checked" : ""} aria-label="Include ${escapeHtml(candidate.name)}" /></label>
     <div>
       <h3>${escapeHtml(candidate.name)}</h3>
       <div class="candidate-sub"><span class="badge ${candidate.recognized ? "" : "unknown"}">${candidate.recognized ? "Recognized provider" : "Unrecognized merchant"}</span><span>${escapeHtml(candidate.frequencyLabel)}</span><span>${candidate.confidence}% confidence</span></div>
@@ -254,7 +273,10 @@ function candidateCard(candidate) {
 }
 
 function bindCandidateReview() {
-  document.querySelector("#back-to-rows").addEventListener("click", renderTransactionReview);
+  document.querySelector("#back-to-rows").addEventListener("click", () => {
+    renderTransactionReview({ focusHeading: true });
+    scrollToTop();
+  });
   document.querySelectorAll(".candidate-toggle").forEach((checkbox) => checkbox.addEventListener("change", () => {
     if (checkbox.checked) state.selectedCandidates.add(checkbox.dataset.id);
     else state.selectedCandidates.delete(checkbox.dataset.id);
@@ -265,8 +287,8 @@ function bindCandidateReview() {
   const confirm = document.querySelector("#confirm");
   if (confirm) confirm.addEventListener("click", () => {
     state.phase = "summary";
-    renderSummary();
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    renderSummary({ focusHeading: true });
+    scrollToTop();
     announce("Your reviewed subscription estimate is ready.");
   });
 }
@@ -275,30 +297,34 @@ function selectedCandidates() {
   return state.candidates.filter(({ id }) => state.selectedCandidates.has(id));
 }
 
-function renderSummary() {
+function renderSummary({ focusHeading = false } = {}) {
   const selected = selectedCandidates();
   const totals = totalsByCurrency(selected);
   const totalCards = Object.entries(totals).map(([currency, total]) => `<div class="total-card"><span>Estimated monthly</span><strong>${escapeHtml(formatMoney(total.monthly, currency))}</strong><small>${escapeHtml(formatMoney(total.annual, currency))} per year</small></div>`).join("");
   app.innerHTML = `<section class="workspace">
     ${progress(3)}
     <div class="panel">
-      <div class="summary-hero"><p class="step-kicker">Reviewed estimate</p><h2>${selected.length ? `${selected.length} quiet drain${selected.length === 1 ? "" : "s"}, made visible.` : "Nothing selected. Nothing counted."}</h2><p>Estimates use the median of the latest three charges. Currencies remain separate—no hidden conversion.</p><div class="totals">${totalCards || `<div class="total-card"><span>Estimated monthly</span><strong>—</strong><small>No selected charges</small></div>`}</div></div>
+      <div class="summary-hero"><p class="step-kicker">Reviewed estimate</p><h2 class="view-heading" tabindex="-1">${selected.length ? `${selected.length} quiet drain${selected.length === 1 ? "" : "s"}, made visible.` : "Nothing selected. Nothing counted."}</h2><p>Estimates use the median of the latest three charges. Currencies remain separate—no hidden conversion.</p><div class="totals">${totalCards || `<div class="total-card"><span>Estimated monthly</span><strong>—</strong><small>No selected charges</small></div>`}</div></div>
       <div class="panel-body">
         <div class="result-list">${selected.map(resultRow).join("") || `<div class="empty-state"><p>Go back if you want to include a candidate.</p></div>`}</div>
         <div class="privacy-export"><p><strong>Safe to take with you.</strong><br />Export includes aggregate provider estimates—not raw descriptions, dates, balances, account details, or imported rows.</p><button class="button secondary" id="export-summary" type="button" ${selected.length ? "" : "disabled"}>Export JSON summary</button></div>
       </div>
-      <footer class="panel-actions"><p>All imported data disappears when this tab is closed or reset.</p><div class="button-row"><button class="button secondary" id="back-to-candidates" type="button">← Review again</button><button class="button primary" id="start-over" type="button">Analyze another file</button></div></footer>
+      <footer class="panel-actions"><p>All imported data disappears when this tab is closed or reset.</p><div class="button-row"><button class="button secondary" id="back-to-candidates" type="button">Review again</button><button class="button primary" id="start-over" type="button">Analyze another file</button></div></footer>
     </div>
   </section>`;
-  document.querySelector("#back-to-candidates").addEventListener("click", renderCandidateReview);
+  document.querySelector("#back-to-candidates").addEventListener("click", () => {
+    renderCandidateReview({ focusHeading: true });
+    scrollToTop();
+  });
   document.querySelector("#start-over").addEventListener("click", reset);
   document.querySelector("#export-summary").addEventListener("click", exportSummary);
+  if (focusHeading) focusView();
 }
 
 function resultRow(candidate) {
   return `<article class="result-row"><div><h3>${escapeHtml(candidate.name)}</h3><p>${escapeHtml(candidate.frequencyLabel)} · ${candidate.confidence}% confidence · ${candidate.recognized ? "recognized provider" : "unrecognized merchant"}</p></div>
     <div class="result-cost"><strong>${escapeHtml(formatMoney(candidate.annualCost, candidate.currency))}</strong><span>estimated / year</span></div>
-    <div>${candidate.provider ? `<a class="reviewed-link" href="${escapeHtml(candidate.provider.cancelUrl)}" target="_blank" rel="noreferrer noopener">${escapeHtml(candidate.provider.linkLabel)} ↗</a>` : `<span class="no-link">No reviewed cancellation link</span>`}</div></article>`;
+    <div>${candidate.provider ? `<a class="reviewed-link" href="${escapeHtml(candidate.provider.cancelUrl)}" target="_blank" rel="noreferrer noopener">${escapeHtml(candidate.provider.linkLabel)}</a>` : `<span class="no-link">No reviewed cancellation link</span>`}</div></article>`;
 }
 
 function exportSummary() {
@@ -314,8 +340,9 @@ function exportSummary() {
 }
 
 function renderError(title, message) {
-  app.innerHTML = `<section class="error-screen" role="alert"><p class="step-kicker">Import stopped safely</p><h1>${escapeHtml(title)}</h1><code>${escapeHtml(message)}</code><button class="button primary" id="start-over" type="button">Try another file</button></section>`;
+  app.innerHTML = `<section class="error-screen" role="alert"><p class="step-kicker">Import stopped safely</p><h1 class="view-heading" tabindex="-1">${escapeHtml(title)}</h1><p class="error-message">${escapeHtml(message)}</p><button class="button primary" id="start-over" type="button">Try another file</button></section>`;
   document.querySelector("#start-over").addEventListener("click", reset);
+  focusView();
 }
 
 function reset() {
@@ -328,8 +355,8 @@ function reset() {
   state.selectedTransactions = new Set();
   state.candidates = [];
   state.selectedCandidates = new Set();
-  renderLanding();
-  window.scrollTo({ top: 0, behavior: "smooth" });
+  renderLanding({ focusHeading: true });
+  scrollToTop();
   announce("Imported data cleared from memory.");
 }
 
