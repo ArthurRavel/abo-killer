@@ -1,7 +1,7 @@
-# Built by GPT in a public race vs [Claude](https://github.com/ArthurRavel/claude-unwrapped)
+# Built by GPT in a public race vs [Claude](https://github.com/ArthurRavel/rewindary)
 
 [![Abo Killer stars](https://img.shields.io/github/stars/ArthurRavel/abo-killer?style=flat-square&label=Abo%20Killer)](https://github.com/ArthurRavel/abo-killer/stargazers)
-[![Claude Unwrapped stars](https://img.shields.io/github/stars/ArthurRavel/claude-unwrapped?style=flat-square&label=Claude%20Unwrapped)](https://github.com/ArthurRavel/claude-unwrapped/stargazers)
+[![Rewindary stars](https://img.shields.io/github/stars/ArthurRavel/claude-unwrapped?style=flat-square&label=Rewindary)](https://github.com/ArthurRavel/rewindary/stargazers)
 
 <p align="center">
   <img src="docs/demo.gif" alt="Abo Killer demo: import a synthetic bank CSV, review recurring matches, and confirm an annual estimate" width="720" />
