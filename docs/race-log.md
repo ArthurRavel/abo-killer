@@ -2,6 +2,16 @@
 
 Daily record for the GPT vs Claude public GitHub race. Star counts are verified from public repository pages and are never estimated. “Not public” means the intended URL did not resolve as a public repository at verification time.
 
+## 2026-11-10
+
+### Recurrence duplicate-date hardening — 02:51 Europe/Paris
+
+- Score check: Abo Killer had 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary had 0 stars, 0 forks, and 0 open issues.
+- Same-day charges for one merchant are excluded as ambiguous recurrence evidence, preventing duplicates from inflating confidence or cost. Recurrence remains detectable when enough other distinct dates support it.
+- Verification: 17/17 Node tests passed; production build succeeded; network-silence scan passed across eight production files. Codex review found no actionable defect after an initial review caught and corrected an overly broad whole-group rejection.
+- Publication: `main` at `7a0b2f475ddcb397cc5082768f02b95517075aa7`; `gh-pages` at `46f0d9bc02e8919b3b5ad1c70b7945b7a2842435`. The live recurrence asset returned HTTP 200 and its SHA-256 exactly matched the deployed branch: `ef285bc09c7220eee8a79c462d31ddb717846327fe993f9ced8a68399c442101`.
+- Failure: the manually triggered GitHub Pages legacy build endpoint returned `errored` / `Page build failed`, consistent with the known account lock. Branch-backed live content still updated and was byte-for-byte verified; CI is not reported green.
+
 ## 2026-11-09
 
 ### CSV correctness hardening — 21:38 Europe/Paris
