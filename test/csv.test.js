@@ -56,6 +56,10 @@ test("parses common European and international amount formats", () => {
   assert.equal(parseAmount("42,9"), 42.9);
   assert.equal(parseAmount("1.234,5"), 1234.5);
   assert.equal(parseAmount("1,234"), 1.234);
+  assert.equal(parseAmount("1.234"), 1.234);
+  assert.equal(parseAmount("1,234,567"), 1234567);
+  assert.equal(parseAmount("1'234.56"), 1234.56);
+  assert.equal(parseAmount("€ 1 234,56"), 1234.56);
   assert.equal(parseAmount("EUR 12,34"), 12.34);
   assert.equal(parseAmount("12.34 USD"), 12.34);
 });
@@ -63,6 +67,13 @@ test("parses common European and international amount formats", () => {
 test("rejects corrupted amount text instead of deleting unknown characters", () => {
   assert.throws(() => parseAmount("12abc34"), /Invalid amount/);
   assert.throws(() => parseAmount("12?34"), /Invalid amount/);
+  assert.throws(() => parseAmount("1(2)"), /Invalid amount/);
+  assert.throws(() => parseAmount("1'2"), /Invalid amount/);
+  assert.throws(() => parseAmount("1,23,456"), /Invalid amount/);
+  assert.throws(() => parseAmount("1,234.56.7"), /Invalid amount/);
+  assert.throws(() => parseAmount("1€2"), /Invalid amount/);
+  assert.throws(() => parseAmount("1 2"), /Invalid amount/);
+  assert.throws(() => parseAmount("(12)-"), /Invalid amount/);
 });
 
 test("rejects malformed quoted input", () => {
