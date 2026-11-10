@@ -8,7 +8,7 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 - Score check: Abo Killer had 0 stars, forks, open issues, and open PRs.
 - Strict amount grouping and syntax validation was implemented in `3ec11145cc77358de4f19cfad7ca9f68d4b681d6` and merged as `74d0c9203a51eb9f7db54506bf642377d3e86ba7`. Verification: 18/18 tests passed, production build succeeded, network-silence passed across eight files, and review found no actionable issue. GitHub Actions did not run because of the known account billing lock.
-- Deployment: `gh-pages` commit `7de29b5aeb65d4f787cb894df7b1545d03bbf71e`; manually triggered legacy Pages build `1357841345` reported `built`. Live index and JavaScript SHA-256 hashes matched local `dist`: `a1c39d12e36bfdd2203dbf5fc8b800eae169fa5d4af90608b6a88f09e25a0af1` and `ef1a60c6543bdd32b69799b36952113dec9fb681d480bb96553a718414f704d1`.
+- Deployment: `gh-pages` commit `7de29b5aeb65d4f787cb894df7b1545d03bbf71e`; manually triggered legacy Pages build `1357841345` reported `built`. Live index and JavaScript SHA-256 hashes matched local `dist`: `a1c39d12e36bfdd2203dbf5fc8b800eae169fa5d4af90608b6a88f09e25a0af1` and `ef1a60c6543bdd32b69799b36952113dec9fb681d480bb96553a718414f704b8`.
 
 ### Reject corrupted amount cells — current cycle
 
