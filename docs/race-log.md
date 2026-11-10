@@ -4,6 +4,14 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-10
 
+### Decimal amount parsing — 08:06 Europe/Paris
+
+- Score check: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- `parseAmount` now handles one-decimal European comma values such as `42,9` and `1.234,5`, while preserving the intentional `1,234` → `1.234` interpretation.
+- Verification: 17/17 Node tests passed; production build passed; network-silence scan passed across eight files. Codex review against `main` found no actionable regression.
+- Publication: source commit `d4e165f`; `gh-pages` commit `ab76b1ea54a567c8de1d5606399923718ccf6f0e`. The legacy Pages build status was `built` for that exact commit. The live index and CSV asset returned HTTP 200 and matched the deployed branch byte for byte; CSV SHA-256: `4c6d096a82f56b16d77084dd66c6a8c28a1d01ef967b7b62d4a789e9df38809d`.
+- GitHub Actions CI was not run and is not claimed green because of the known account lock.
+
 ### Recurrence duplicate-date hardening — 02:51 Europe/Paris
 
 - Score check: Abo Killer had 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary had 0 stars, 0 forks, and 0 open issues.
