@@ -161,18 +161,56 @@ export function parseAmount(input) {
   if (typeof input === "number") return input;
   let value = String(input ?? "").trim();
   value = value.replace(/^(?:[A-Z]{3}\s+)|(?:\s+[A-Z]{3})$/i, "");
-  value = value.replace(/[\p{Sc}\s]/gu, "");
-  if (!/^[\d,.'()\-+]+$/.test(value)) throw new Error(`Invalid amount: ${input}`);
-  const negativeParentheses = /^\(.*\)$/.test(value);
-  value = value.replace(/[()']/g, "");
+  const negativeParentheses = value.startsWith("(") && value.endsWith(")");
+  if (negativeParentheses) value = value.slice(1, -1);
+  value = value.replace(/^[\p{Sc}\s]+|[\p{Sc}\s]+$/gu, "");
+  if (/[\p{Sc}]/u.test(value)) throw new Error(`Invalid amount: ${input}`);
+  value = value.replace(/\s+/g, "'");
+  if (!/^[+-]?\d[\d,.'+-]*$/.test(value) || /[()]/.test(value)) {
+    throw new Error(`Invalid amount: ${input}`);
+  }
+  const sign = value[0] === "-" || value[0] === "+" ? value[0] : "";
+  if (sign) value = value.slice(1);
+  if (/[+-]/.test(value)) throw new Error(`Invalid amount: ${input}`);
+
+  const validGroupedInteger = (integer, separator) => {
+    const groups = integer.split(separator);
+    return groups.length > 1 && /^[0-9]{1,3}$/.test(groups[0]) && groups.slice(1).every((group) => /^[0-9]{3}$/.test(group));
+  };
+  const separators = [...value].filter((char) => ",.'".includes(char));
+  const uniqueSeparators = [...new Set(separators)];
   const lastComma = value.lastIndexOf(",");
   const lastDot = value.lastIndexOf(".");
-  if (lastComma > lastDot) value = value.replace(/\./g, "").replace(",", ".");
-  else if (lastDot > lastComma && lastComma >= 0) value = value.replace(/,/g, "");
-  else if (lastComma >= 0) {
-    const decimals = value.length - lastComma - 1;
-    value = decimals === 1 || decimals === 2 ? value.replace(",", ".") : value.replace(/,/g, "");
+  if (uniqueSeparators.includes("'")) {
+    if (uniqueSeparators.some((separator) => separator !== "'" && separator !== "." && separator !== ",")) throw new Error(`Invalid amount: ${input}`);
+    const decimal = lastComma > lastDot ? "," : lastDot > lastComma ? "." : "";
+    const parts = decimal ? value.split(decimal) : [value, ""];
+    const [integer, fraction] = parts;
+    if (parts.length !== 2) throw new Error(`Invalid amount: ${input}`);
+    if (!validGroupedInteger(integer, "'") || (decimal && !/^\d+$/.test(fraction))) throw new Error(`Invalid amount: ${input}`);
+    value = `${integer.replaceAll("'", "")}${decimal ? `.${fraction}` : ""}`;
+  } else if (lastComma >= 0 && lastDot >= 0) {
+    const decimal = lastComma > lastDot ? "," : ".";
+    const grouping = decimal === "," ? "." : ",";
+    const parts = value.split(decimal);
+    const [integer, fraction] = parts;
+    if (parts.length !== 2 || !fraction || !/^\d+$/.test(fraction) || !validGroupedInteger(integer, grouping)) throw new Error(`Invalid amount: ${input}`);
+    value = `${integer.replaceAll(grouping, "")}.${fraction}`;
+  } else if (uniqueSeparators.length === 1) {
+    const separator = uniqueSeparators[0];
+    const count = separators.length;
+    const grouped = validGroupedInteger(value, separator);
+    const finalGroup = value.slice(value.lastIndexOf(separator) + 1);
+    const isDecimal = count === 1 && finalGroup.length !== 3 && /^\d+$/.test(finalGroup);
+    if (!grouped && !isDecimal) throw new Error(`Invalid amount: ${input}`);
+    if (count > 1 || separator === "'") value = value.replaceAll(separator, "");
+    else if (isDecimal) value = value.replace(separator, ".");
+    else if (separator === ",") value = value.replace(",", ".");
+  } else if (separators.length) {
+    throw new Error(`Invalid amount: ${input}`);
   }
+  value = `${sign}${value}`;
+  if (negativeParentheses && sign) throw new Error(`Invalid amount: ${input}`);
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) throw new Error(`Invalid amount: ${input}`);
   return negativeParentheses ? -Math.abs(parsed) : parsed;
