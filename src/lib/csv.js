@@ -159,7 +159,10 @@ export function suggestMapping(headers) {
 
 export function parseAmount(input) {
   if (typeof input === "number") return input;
-  let value = String(input ?? "").trim().replace(/[€£$\s]/g, "").replace(/[^\d,.'()\-+]/g, "");
+  let value = String(input ?? "").trim();
+  value = value.replace(/^(?:[A-Z]{3}\s+)|(?:\s+[A-Z]{3})$/i, "");
+  value = value.replace(/[\p{Sc}\s]/gu, "");
+  if (!/^[\d,.'()\-+]+$/.test(value)) throw new Error(`Invalid amount: ${input}`);
   const negativeParentheses = /^\(.*\)$/.test(value);
   value = value.replace(/[()']/g, "");
   const lastComma = value.lastIndexOf(",");

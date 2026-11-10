@@ -4,6 +4,12 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-10
 
+### Reject corrupted amount cells — current cycle
+
+- `parseAmount` no longer strips arbitrary letters or punctuation and turns damaged values into plausible numbers. It accepts currency symbols and an optional three-letter currency code while preserving supported numeric formats.
+- Added synthetic tests for accepted currency codes and rejected embedded text/punctuation.
+- Verification: 18/18 Node tests passed; production build succeeded; network-silence scan passed across eight production files; `git diff --check` passed. Review against `main` found no actionable regression. Browser checks were not applicable because the UI did not change.
+
 ### Decimal amount parsing — 08:06 Europe/Paris
 
 - Score check: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
