@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { detectAdapter, detectDelimiter, importCsv, normalizeRows, parseAmount, parseCsv } from "../src/lib/csv.js";
+import { detectAdapter, detectDelimiter, importCsv, normalizeRows, parseAmount, parseCsv, parseDate } from "../src/lib/csv.js";
 
 const fixture = (name) => readFile(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
 
@@ -81,4 +81,13 @@ test("rejects malformed quoted input", () => {
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,broken"text,-4'), /quoted field must start/);
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,"broken"text,-4'), /after a closing quote/);
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,too,few,columns'), /row 2 has 4 columns; expected 3/);
+});
+
+test("rejects date cells with trailing corruption while accepting complete date formats", () => {
+  assert.equal(parseDate("2025-03-04"), "2025-03-04");
+  assert.equal(parseDate("2025-03-04T12:30:00Z"), "2025-03-04");
+  assert.equal(parseDate("04/03/2025"), "2025-03-04");
+  assert.throws(() => parseDate("2025-03-04oops"), /Invalid date/);
+  assert.throws(() => parseDate("2025-03-04T99:99:00Z"), /Invalid date/);
+  assert.throws(() => parseDate("04/03/2025 damaged"), /Invalid date/);
 });
