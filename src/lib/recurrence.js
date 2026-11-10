@@ -70,7 +70,11 @@ export function detectRecurring(transactions) {
     });
 
   const candidates = [];
-  for (const group of groups.values()) {
+  for (const rawGroup of groups.values()) {
+    const dateCounts = new Map();
+    for (const { date } of rawGroup) dateCounts.set(date, (dateCounts.get(date) ?? 0) + 1);
+    // Same-day amounts are ambiguous (including identical ones), so exclude that date entirely.
+    const group = rawGroup.filter(({ date }) => dateCounts.get(date) === 1);
     group.sort((a, b) => a.date.localeCompare(b.date));
     if (group.length < 2) continue;
     const cadence = classifyCadence(group.map(({ date }) => date));
