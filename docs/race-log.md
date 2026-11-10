@@ -4,6 +4,14 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-10
 
+### Strict date cell validation — 23:46 Europe/Paris
+
+- Score check: Abo Killer had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Malformed or trailing date-cell content is rejected; complete ISO dates, ISO timestamps, and day-first inputs remain accepted.
+- Implemented in `2f22273767c329e6119d9f10267e5d70715781b5`, merged to `main` as `7e2b65804d198174d19cb273ebde8f397925b50e`. Verification: 19/19 Node tests passed, production build passed, network-silence passed across eight production files, `git diff --check` passed, and Codex review against `main` found no regression. No browser check was needed because the UI did not change.
+- Deployment: `gh-pages` commit `935186cb2b0f988add135cec1333c23ce638832c`; manually triggered legacy Pages build `1358508845` reported built for that exact commit. Live `index.html`, `assets/lib/csv.js`, and `build-manifest.json` returned successfully and matched local `dist` exactly. SHA-256: index `a1c39d12e36bfdd2203dbf5fc8b800eae169fa5d4af90608b6a88f09e25a0af1`, CSV `f0ac36ac90700d38289dc960085e6a31d768c26107de9bcd38b8d85dff24e46b`, manifest `e9dd5cbe3692605b7ab4678edcccd72ef852781b678a7bc4221acc2f73159c0f`.
+- The first `gh-pages` push was rejected as non-fast-forward because the local branch was stale. The new unpublished deploy commit was rebased onto `origin/gh-pages` and pushed normally as a fast-forward; published history was not rewritten. GitHub Actions CI did not run and is not claimed green due to the known billing lock.
+
 ### Strict amount syntax — 18:25 Europe/Paris
 
 - Score check: Abo Killer had 0 stars, forks, open issues, and open PRs.
