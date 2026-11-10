@@ -53,6 +53,9 @@ test("parses common European and international amount formats", () => {
   assert.equal(parseAmount("-1.234,56 €"), -1234.56);
   assert.equal(parseAmount("(1,234.56)"), -1234.56);
   assert.equal(parseAmount("42,90"), 42.9);
+  assert.equal(parseAmount("42,9"), 42.9);
+  assert.equal(parseAmount("1.234,5"), 1234.5);
+  assert.equal(parseAmount("1,234"), 1.234);
 });
 
 test("rejects malformed quoted input", () => {
