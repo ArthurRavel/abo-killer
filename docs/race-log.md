@@ -9,6 +9,9 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 - `parseAmount` no longer strips arbitrary letters or punctuation and turns damaged values into plausible numbers. It accepts currency symbols and an optional three-letter currency code while preserving supported numeric formats.
 - Added synthetic tests for accepted currency codes and rejected embedded text/punctuation.
 - Verification: 18/18 Node tests passed; production build succeeded; network-silence scan passed across eight production files; `git diff --check` passed. Review against `main` found no actionable regression. Browser checks were not applicable because the UI did not change.
+- Score check at 13:15 Europe/Paris: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Publication: `main` commit `9c721cc72924337c83aab826ea89485cf94fa4a9`; `gh-pages` deployment `5091472be4ba670b8b5a352c966d529f7095e82f`. The manually triggered legacy Pages build status was `built` for that exact deploy. The live index and `assets/lib/csv.js` returned HTTP 200 and matched the deployed bytes; CSV SHA-256: `9da587469a07cd9ce78e32e4b171e419f8d23816fc629239885443255f3e36c4`.
+- The automatic build initially errored under the known account lock; the manual legacy build succeeded. GitHub Actions CI is not claimed green.
 
 ### Decimal amount parsing — 08:06 Europe/Paris
 
