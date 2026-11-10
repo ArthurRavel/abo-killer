@@ -168,7 +168,7 @@ export function parseAmount(input) {
   else if (lastDot > lastComma && lastComma >= 0) value = value.replace(/,/g, "");
   else if (lastComma >= 0) {
     const decimals = value.length - lastComma - 1;
-    value = decimals === 2 ? value.replace(",", ".") : value.replace(/,/g, "");
+    value = decimals === 1 || decimals === 2 ? value.replace(",", ".") : value.replace(/,/g, "");
   }
   const parsed = Number(value);
   if (!Number.isFinite(parsed)) throw new Error(`Invalid amount: ${input}`);
