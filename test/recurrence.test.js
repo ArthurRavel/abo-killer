@@ -43,6 +43,34 @@ test("requires strong evidence for unknown merchants", () => {
   assert.equal(detectRecurring(weak).length, 0);
 });
 
+test("same-day duplicates cannot manufacture enough recurrence evidence", () => {
+  const rows = [
+    transaction("2025-01-05", "Cloud Nine Studio", -24),
+    transaction("2025-02-05", "Cloud Nine Studio", -24),
+    transaction("2025-02-05", "Cloud Nine Studio", -24),
+    transaction("2025-02-05", "Cloud Nine Studio", -25),
+    transaction("2025-03-05", "Cloud Nine Studio", -24),
+  ];
+  assert.deepEqual(detectRecurring(rows), []);
+});
+
+test("detects a sufficiently supported recurrence despite an ambiguous duplicate date", () => {
+  const rows = [
+    transaction("2025-01-05", "Cloud Nine Studio", -24),
+    transaction("2025-02-05", "Cloud Nine Studio", -24),
+    transaction("2025-02-05", "Cloud Nine Studio", -25),
+    transaction("2025-03-05", "Cloud Nine Studio", -24),
+    transaction("2025-04-05", "Cloud Nine Studio", -24),
+    transaction("2025-05-05", "Cloud Nine Studio", -24),
+    transaction("2025-06-05", "Cloud Nine Studio", -24),
+  ];
+  const [match] = detectRecurring(rows);
+  assert.equal(match.name, "Cloud Nine Studio");
+  assert.equal(match.frequency, "monthly");
+  assert.equal(match.occurrences.length, 5);
+  assert.ok(match.occurrences.every(({ date }) => date !== "2025-02-05"));
+});
+
 test("excludes transfers, salary, groceries, and incoming money", () => {
   const rows = [
     ...["2025-01-01", "2025-02-01", "2025-03-01", "2025-04-01"].map((date) => transaction(date, "SEPA transfer to savings", -200)),
