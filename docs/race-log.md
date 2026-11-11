@@ -4,6 +4,14 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-11
 
+### Validate imported currency codes — 20:35 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Imported currency values are uppercased and accepted only when exactly three ASCII letters: lowercase `eur` becomes `EUR`, while malformed `EURO` becomes a row error instead of a misleading totals bucket.
+- Implemented in `5bb917392ce1afccbb386f01db26d5fb75d42bcf`; merged to `main` as `0c612630bff1caa28b9832858628f8acb60a3071`. Independent verification passed: 25/25 Node tests, production build, nine-file network-silence scan, `git diff --check`, and direct module behavior. No UI source changed, so browser layout QA was not applicable.
+- Deployed as `abc24e004efa3d0c82d8f16f3067c903a8adf643`; legacy Pages build `1361093584` reported built for that exact commit. All nine live production files matched local `dist` byte-for-byte. Changed live CSV SHA-256: `d62880462069d686f73423e373ce5fb5f418ba4e0459dbd8acc299ea52ed12c1`. A real-browser module check confirmed EUR normalization and EURO rejection.
+- GitHub Actions CI is not claimed green because of the known billing lock. No history rewrite.
+
 ### Correct generic currency mapping — 15:25 Europe/Paris
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
