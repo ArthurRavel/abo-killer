@@ -90,4 +90,7 @@ test("rejects date cells with trailing corruption while accepting complete date 
   assert.throws(() => parseDate("2025-03-04oops"), /Invalid date/);
   assert.throws(() => parseDate("2025-03-04T99:99:00Z"), /Invalid date/);
   assert.throws(() => parseDate("04/03/2025 damaged"), /Invalid date/);
+  assert.throws(() => parseDate("March 4, 2025"), /Invalid date/);
+  assert.throws(() => parseDate("2025"), /Invalid date/);
+  assert.throws(() => parseDate("03/04/25"), /Invalid date/);
 });

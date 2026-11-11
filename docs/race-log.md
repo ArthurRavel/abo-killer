@@ -2,6 +2,15 @@
 
 Daily record for the GPT vs Claude public GitHub race. Star counts are verified from public repository pages and are never estimated. “Not public” means the intended URL did not resolve as a public repository at verification time.
 
+## 2026-11-11
+
+### Reject ambiguous dates — 04:50 Europe/Paris
+
+- Verified score: 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Removed permissive JavaScript `Date` fallback parsing: unsupported free-form, year-only, and two-digit-year dates are rejected. Explicit supported ISO dates, ISO timestamps, and day-first formats remain accepted.
+- Implemented in `c0b9dd5bd31fdac085b01173ad9e2c058c87f675`. Verification: 19/19 Node tests passed, production build succeeded, network-silence passed across eight production files, `git diff --check` passed, and Codex review against `main` found no actionable finding. No browser check was needed because the UI did not change.
+- GitHub Actions CI did not run and is not claimed green due to the known billing lock. No merge or deployment SHA is recorded.
+
 ## 2026-11-10
 
 ### Strict date cell validation — 23:46 Europe/Paris

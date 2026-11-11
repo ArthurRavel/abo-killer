@@ -225,8 +225,6 @@ export function parseDate(input) {
   }
   match = value.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/);
   if (match) return validDate(Number(match[3]), Number(match[2]), Number(match[1]), input);
-  const date = new Date(value);
-  if (!Number.isNaN(date.valueOf())) return date.toISOString().slice(0, 10);
   throw new Error(`Invalid date: ${input}`);
 }
 
