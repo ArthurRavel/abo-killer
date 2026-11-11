@@ -392,7 +392,9 @@ td.amount { font-variant-numeric: tabular-nums; text-align: right; }
 td.amount.positive { color: var(--positive); }
 .check-control { display: grid; place-items: center; width: 2.75rem; height: 2.75rem; cursor: pointer; }
 .check { width: 1.2rem; height: 1.2rem; accent-color: var(--ink); cursor: pointer; }
-.more-row { margin: 0.9rem 0 0; color: #6b7280; font-size: 0.8rem; text-align: center; }
+.table-pagination { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-top: 1rem; color: var(--ink-muted); font-size: 0.82rem; }
+.table-pagination .button-row { align-items: center; }
+.page-count { min-width: 6.5rem; text-align: center; font-variant-numeric: tabular-nums; }
 
 .candidate-grid { display: grid; gap: 1rem; }
 .candidate {
@@ -504,6 +506,9 @@ summary { color: #4e5868; cursor: pointer; font-size: 0.78rem; font-weight: 750;
   .step-label-full { display: none; }
   .step-label-short { display: inline; }
   .mapping-grid { grid-template-columns: 1fr; }
+  .table-pagination { align-items: stretch; flex-direction: column; }
+  .table-pagination .button-row { justify-content: space-between; }
+  .table-pagination .button { min-width: 6rem; }
   .candidate { grid-template-columns: auto 1fr; }
   .candidate-price { grid-column: 2; text-align: left; }
   .privacy-export { align-items: stretch; flex-direction: column; }
