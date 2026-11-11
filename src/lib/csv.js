@@ -249,13 +249,15 @@ export function normalizeRows(parsed, mapping) {
       const fallback = mapping.fallbackDescription ? record[mapping.fallbackDescription] : "";
       const description = String(primaryDescription || fallback || "").trim();
       if (!description) throw new Error("Missing description");
+      const currency = String(mapping.fixedCurrency || record[mapping.currency] || "EUR").trim().toUpperCase();
+      if (!/^[A-Z]{3}$/.test(currency)) throw new Error(`Invalid currency code: ${currency}`);
       transactions.push({
         id: `row-${record.__row}`,
         sourceRow: record.__row,
         date: parseDate(record[mapping.date]),
         description,
         amount: parseAmount(record[mapping.amount]),
-        currency: String(mapping.fixedCurrency || record[mapping.currency] || "EUR").trim().toUpperCase(),
+        currency,
       });
     } catch (error) {
       errors.push({ row: record.__row, message: error.message });
