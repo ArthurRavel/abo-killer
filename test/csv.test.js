@@ -57,6 +57,13 @@ test("prefers an actual currency column when payment type metadata is also prese
   assert.equal(mapping.fixedCurrency, "");
 });
 
+test("normalizes currency codes and reports malformed values as row errors", () => {
+  const parsed = parseCsv("Date,Description,Amount,Currency\n2025-01-01,Studio,-12.50,eur\n2025-01-02,Studio,-12.50,EURO");
+  const result = normalizeRows(parsed, { date: "Date", description: "Description", amount: "Amount", currency: "Currency" });
+  assert.deepEqual(result.transactions.map(({ currency }) => currency), ["EUR"]);
+  assert.deepEqual(result.errors, [{ row: 3, message: "Invalid currency code: EURO" }]);
+});
+
 test("parses adversarial European CSV quoting, BOM, CRLF, and embedded delimiters", async () => {
   const text = (await fixture("european-adversarial.csv")).replaceAll("\n", "\r\n");
   const parsed = parseCsv(text);
