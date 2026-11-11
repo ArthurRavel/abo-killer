@@ -1,7 +1,7 @@
 import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
-import { detectAdapter, detectDelimiter, importCsv, normalizeRows, parseAmount, parseCsv, parseDate } from "../src/lib/csv.js";
+import { detectAdapter, detectDelimiter, importCsv, normalizeRows, parseAmount, parseCsv, parseDate, suggestMapping } from "../src/lib/csv.js";
 
 const fixture = (name) => readFile(new URL(`./fixtures/${name}`, import.meta.url), "utf8");
 
@@ -34,6 +34,27 @@ test("handles semicolon-delimited European decimals and quoted commas", async ()
   assert.equal(result.errors.length, 0);
   assert.equal(result.transactions[0].description, "ACME, VIDEO");
   assert.equal(result.transactions[2].amount, -10.99);
+});
+
+test("does not map a payment type column as currency", () => {
+  const headers = ["Date", "Description", "Amount", "Type Foreign Currency"];
+  const mapping = suggestMapping(headers);
+  assert.equal(mapping.currency, "");
+  assert.equal(mapping.fixedCurrency, "EUR");
+
+  const parsed = parseCsv([
+    headers.join(","),
+    "2025-01-01,Example service,-12.50,Mastercard",
+  ].join("\n"));
+  const result = normalizeRows(parsed, mapping);
+  assert.equal(result.errors.length, 0);
+  assert.equal(result.transactions[0].currency, "EUR");
+});
+
+test("prefers an actual currency column when payment type metadata is also present", () => {
+  const mapping = suggestMapping(["Date", "Details", "Amount", "Type Foreign Currency", "Original Currency"]);
+  assert.equal(mapping.currency, "Original Currency");
+  assert.equal(mapping.fixedCurrency, "");
 });
 
 test("parses adversarial European CSV quoting, BOM, CRLF, and embedded delimiters", async () => {

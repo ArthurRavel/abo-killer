@@ -8,7 +8,7 @@ const DESCRIPTION_COLUMNS = [
   "reference",
 ];
 const AMOUNT_COLUMNS = ["amount", "amount (eur)", "transaction amount", "value"];
-const CURRENCY_COLUMNS = ["currency", "original currency", "type foreign currency"];
+const CURRENCY_COLUMNS = ["currency", "original currency"];
 
 export const ADAPTERS = [
   {
