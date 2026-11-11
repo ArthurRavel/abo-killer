@@ -1,6 +1,7 @@
 import { detectAdapter, normalizeRows, parseCsv, suggestMapping } from "./lib/csv.js";
 import { createSafeSummary, detectRecurring, totalsByCurrency } from "./lib/recurrence.js";
 import { SAMPLE_CSV, SAMPLE_FILENAME } from "./sample-data.js";
+import { paginate } from "./lib/pagination.js";
 
 const app = document.querySelector("#app");
 const announcer = document.querySelector("#announcer");
@@ -13,6 +14,7 @@ const state = {
   mapping: null,
   transactions: [],
   rowErrors: [],
+  transactionPage: 0,
   selectedTransactions: new Set(),
   candidates: [],
   selectedCandidates: new Set(),
@@ -179,8 +181,10 @@ function mappingFields() {
     </div>`;
 }
 
-function renderTransactionReview({ focusHeading = false, focusMap = "" } = {}) {
-  const preview = state.transactions.slice(0, 18);
+function renderTransactionReview({ focusHeading = false, focusMap = "", focusPageControl = "" } = {}) {
+  const page = paginate(state.transactions, state.transactionPage);
+  state.transactionPage = page.page;
+  const preview = page.items;
   app.innerHTML = `<section class="workspace">
     ${progress(1)}
     <div class="panel">
@@ -198,7 +202,7 @@ function renderTransactionReview({ focusHeading = false, focusMap = "" } = {}) {
             <td>${escapeHtml(transaction.date)}</td><td>${escapeHtml(transaction.description)}</td><td>${escapeHtml(transaction.currency)}</td>
             <td class="amount ${transaction.amount > 0 ? "positive" : ""}">${escapeHtml(formatMoney(transaction.amount, transaction.currency))}</td>
           </tr>`).join("")}</tbody>
-        </table></div>${state.transactions.length > preview.length ? `<p class="more-row">+ ${state.transactions.length - preview.length} more parsed rows included in analysis</p>` : ""}` : `<div class="empty-state"><p>No valid rows yet. Choose the required columns above.</p></div>`}
+        </table></div>${page.pageCount > 1 ? `<nav class="table-pagination" aria-label="Transaction pages"><span aria-live="polite">Rows ${page.start + 1}–${page.end} of ${state.transactions.length}</span><div class="button-row"><button class="button secondary" id="previous-page" type="button" ${page.page === 0 ? "disabled" : ""}>Previous</button><span class="page-count">Page ${page.page + 1} of ${page.pageCount}</span><button class="button secondary" id="next-page" type="button" ${page.page === page.pageCount - 1 ? "disabled" : ""}>Next</button></div></nav>` : ""}` : `<div class="empty-state"><p>No valid rows yet. Choose the required columns above.</p></div>`}
       </div>
       <footer class="panel-actions">
         <p><strong id="selected-count">${state.selectedTransactions.size}</strong> parsed rows selected · analysis happens in memory</p>
@@ -208,6 +212,7 @@ function renderTransactionReview({ focusHeading = false, focusMap = "" } = {}) {
   </section>`;
   bindTransactionReview();
   if (focusMap) focusView(`[data-map="${focusMap}"]`);
+  else if (focusPageControl) focusView(`#${focusPageControl}`);
   else if (focusHeading) focusView();
 }
 
@@ -217,8 +222,15 @@ function bindTransactionReview() {
     state.mapping[field] = select.value;
     if (field === "currency") state.mapping.fixedCurrency = select.value ? "" : "EUR";
     applyMapping();
+    state.transactionPage = 0;
     renderTransactionReview({ focusMap: field });
   }));
+  const navigatePage = (page, control) => {
+    state.transactionPage = page;
+    renderTransactionReview({ focusPageControl: control });
+  };
+  document.querySelector("#previous-page")?.addEventListener("click", () => navigatePage(state.transactionPage - 1, "previous-page"));
+  document.querySelector("#next-page")?.addEventListener("click", () => navigatePage(state.transactionPage + 1, "next-page"));
   document.querySelectorAll(".transaction-toggle").forEach((checkbox) => checkbox.addEventListener("change", () => {
     if (checkbox.checked) state.selectedTransactions.add(checkbox.dataset.id);
     else state.selectedTransactions.delete(checkbox.dataset.id);
@@ -352,6 +364,7 @@ function reset() {
   state.mapping = null;
   state.transactions = [];
   state.rowErrors = [];
+  state.transactionPage = 0;
   state.selectedTransactions = new Set();
   state.candidates = [];
   state.selectedCandidates = new Set();
