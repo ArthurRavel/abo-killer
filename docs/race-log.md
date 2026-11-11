@@ -9,7 +9,8 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 - Verified score: 0 stars, 0 forks, 0 open issues, and 0 open PRs.
 - Removed permissive JavaScript `Date` fallback parsing: unsupported free-form, year-only, and two-digit-year dates are rejected. Explicit supported ISO dates, ISO timestamps, and day-first formats remain accepted.
 - Implemented in `c0b9dd5bd31fdac085b01173ad9e2c058c87f675`. Verification: 19/19 Node tests passed, production build succeeded, network-silence passed across eight production files, `git diff --check` passed, and Codex review against `main` found no actionable finding. No browser check was needed because the UI did not change.
-- GitHub Actions CI did not run and is not claimed green due to the known billing lock. No merge or deployment SHA is recorded.
+- Merged to `main` as `ec52923fa54b2948bb9af3c2c6b3d5f332148349`; deployed to `gh-pages` as `8ddaece598b2098c72eea61a44b0ef62162d5b09`. Legacy Pages build `1359101777` reported `built`. All eight live production files matched local `dist` byte-for-byte by SHA-256. Changed `assets/lib/csv.js`: `c7603e7cb579da065a9e1055b209b8530bd5e69b12a7f08a54c9bf9e52efe267`; `index.html`: `a1c39d12e36bfdd2203dbf5fc8b800eae169fa5d4af90608b6a88f09e25a0af1`; `build-manifest.json`: `e9dd5cbe3692605b7ab4678edcccd72ef852781b678a7bc4221acc2f73159c0f`.
+- GitHub Actions CI did not run and is not claimed green due to the known billing lock.
 
 ## 2026-11-10
 
