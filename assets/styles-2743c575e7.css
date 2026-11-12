@@ -382,6 +382,10 @@ h1 {
   font-size: 0.88rem;
 }
 
+.import-errors summary { cursor: pointer; }
+.import-errors ul { display: grid; gap: 0.4rem; max-height: 14rem; overflow: auto; margin: 0.75rem 0 0; padding-left: 1.25rem; }
+.import-errors li { overflow-wrap: anywhere; }
+
 .table-wrap { overflow-x: auto; border: 1px solid var(--line); border-radius: 0.75rem; }
 table { width: 100%; border-collapse: collapse; font-size: 0.86rem; }
 th { color: #656d7b; background: var(--surface-soft); font-size: 0.7rem; letter-spacing: 0.07em; text-align: left; text-transform: uppercase; }
