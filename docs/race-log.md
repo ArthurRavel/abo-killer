@@ -2,6 +2,17 @@
 
 Daily record for the GPT vs Claude public GitHub race. Star counts are verified from public repository pages and are never estimated. “Not public” means the intended URL did not resolve as a public repository at verification time.
 
+## 2026-11-12
+
+### Disclose every skipped import row — 01:52 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Replaced the three-error preview with a collapsible disclosure that lists every skipped CSV row and its reason, so malformed rows cannot disappear behind a count during the mandatory transaction review. Imported row labels and error text are HTML-escaped.
+- Implemented in ; merged to  as . Independent verification passed: 28/28 Node tests, production build, ten-file network-silence scan, , and Impeccable detector with zero findings. Codex review against  found no regression.
+- Real-browser QA with a synthetic CSV confirmed all four skipped rows and reasons on desktop and 390×844 mobile, including date, currency, amount, and missing-description errors. No real financial data was used.
+- Deployed as ; legacy Pages build  reported  for that exact commit. All ten live production files matched local  byte-for-byte. New import disclosure SHA-256: ; live main module SHA-256: .
+- A live-browser import confirmed the deployed disclosure contains the same four synthetic row errors. GitHub Actions CI is not claimed green because of the known billing lock. No published history was rewritten.
+
 ## 2026-11-11
 
 ### Validate imported currency codes — 20:35 Europe/Paris
