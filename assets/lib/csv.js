@@ -223,13 +223,13 @@ export function parseAmount(input) {
 
 export function parseDate(input) {
   const value = String(input ?? "").trim();
-  let match = value.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})(T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/i);
+  let match = value.match(/^(\d{4})([-/.])(\d{1,2})\2(\d{1,2})(T\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})?)?$/i);
   if (match) {
-    if (match[4] && Number.isNaN(new Date(value).valueOf())) throw new Error(`Invalid date: ${input}`);
-    return validDate(Number(match[1]), Number(match[2]), Number(match[3]), input);
+    if (match[5] && Number.isNaN(new Date(value).valueOf())) throw new Error(`Invalid date: ${input}`);
+    return validDate(Number(match[1]), Number(match[3]), Number(match[4]), input);
   }
-  match = value.match(/^(\d{1,2})[/.-](\d{1,2})[/.-](\d{4})$/);
-  if (match) return validDate(Number(match[3]), Number(match[2]), Number(match[1]), input);
+  match = value.match(/^(\d{1,2})([/.-])(\d{1,2})\2(\d{4})$/);
+  if (match) return validDate(Number(match[4]), Number(match[3]), Number(match[1]), input);
   throw new Error(`Invalid date: ${input}`);
 }
 
