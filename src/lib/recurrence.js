@@ -44,14 +44,35 @@ function roundMoney(value) {
 
 function classifyCadence(dates) {
   const intervals = dates.slice(1).map((date, index) => daysBetween(dates[index], date));
-  const typical = median(intervals);
-  const cadence = CADENCES.find(({ min, max }) => typical >= min && typical <= max);
+  const matches = CADENCES.map((cadence) => {
+    const normalizedIntervals = intervals.map((gap) => {
+      // Allow a gap to represent one missed billing period, but never infer
+      // multiple missing periods from a single pair of transactions.
+      for (const periods of [1, 2]) {
+        const normalized = gap / periods;
+        if (normalized >= cadence.min && normalized <= cadence.max) return { normalized, periods };
+      }
+      return null;
+    });
+    const matching = normalizedIntervals.filter(Boolean).length;
+    if (!matching) return null;
+    const typicalGap = median(normalizedIntervals.filter(Boolean).map(({ normalized }) => normalized));
+    return {
+      ...cadence,
+      typicalGap,
+      intervalConsistency: matching / intervals.length,
+      missedPeriods: normalizedIntervals.filter((interval) => interval?.periods === 2).length,
+      matching,
+    };
+  }).filter(Boolean);
+  const cadence = matches.sort((a, b) =>
+    b.intervalConsistency - a.intervalConsistency ||
+    b.matching - a.matching ||
+    a.days - b.days,
+  )[0];
   if (!cadence) return null;
-  const matching = intervals.filter((gap) => gap >= cadence.min && gap <= cadence.max).length;
   return {
     ...cadence,
-    typicalGap: typical,
-    intervalConsistency: matching / intervals.length,
     intervals,
   };
 }
@@ -101,6 +122,7 @@ export function detectRecurring(transactions) {
     const evidence = [
       `${group.length} matching charges`,
       `${cadence.typicalGap}-day median gap`,
+      ...(cadence.missedPeriods ? [`${cadence.missedPeriods} interval${cadence.missedPeriods === 1 ? " spans" : "s span"} two ${cadence.label.toLowerCase()} periods`] : []),
       cadence.intervalConsistency === 1
         ? "all intervals match the cadence"
         : `${Math.round(cadence.intervalConsistency * 100)}% of intervals match the cadence`,

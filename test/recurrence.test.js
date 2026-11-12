@@ -43,6 +43,21 @@ test("requires strong evidence for unknown merchants", () => {
   assert.equal(detectRecurring(weak).length, 0);
 });
 
+test("recognizes an otherwise regular monthly pattern with one missed billing period", () => {
+  const rows = ["2025-01-05", "2025-02-05", "2025-04-05", "2025-05-05"]
+    .map((date) => transaction(date, "Cloud Nine Studio", -24));
+  const [match] = detectRecurring(rows);
+  assert.equal(match.frequency, "monthly");
+  assert.equal(match.annualCost, 288);
+  assert.ok(match.evidence.includes("1 interval spans two monthly periods"));
+});
+
+test("does not infer recurrence across gaps longer than two billing periods", () => {
+  const rows = ["2025-01-05", "2025-02-05", "2025-05-05", "2025-06-05"]
+    .map((date) => transaction(date, "Cloud Nine Studio", -24));
+  assert.deepEqual(detectRecurring(rows), []);
+});
+
 test("same-day duplicates cannot manufacture enough recurrence evidence", () => {
   const rows = [
     transaction("2025-01-05", "Cloud Nine Studio", -24),
