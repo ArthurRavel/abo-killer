@@ -2,6 +2,7 @@ import { detectAdapter, normalizeRows, parseCsv, suggestMapping } from "./lib/cs
 import { createSafeSummary, detectRecurring, totalsByCurrency } from "./lib/recurrence.js";
 import { SAMPLE_CSV, SAMPLE_FILENAME } from "./sample-data.js";
 import { paginate } from "./lib/pagination.js";
+import { renderSkippedRows } from "./lib/import-errors.js";
 
 const app = document.querySelector("#app");
 const announcer = document.querySelector("#announcer");
@@ -194,7 +195,7 @@ function renderTransactionReview({ focusHeading = false, focusMap = "", focusPag
       </header>
       <div class="panel-body">
         ${mappingFields()}
-        ${state.rowErrors.length ? `<div class="notice"><strong>${state.rowErrors.length} row${state.rowErrors.length === 1 ? "" : "s"} skipped.</strong> ${escapeHtml(state.rowErrors.slice(0, 3).map((error) => `Row ${error.row}: ${error.message}`).join(" · "))}</div>` : ""}
+        ${renderSkippedRows(state.rowErrors)}
         ${preview.length ? `<div class="table-wrap"><table>
           <thead><tr><th><span class="sr-only">Include</span></th><th>Date</th><th>Description</th><th>Currency</th><th class="amount">Amount</th></tr></thead>
           <tbody>${preview.map((transaction) => `<tr>
