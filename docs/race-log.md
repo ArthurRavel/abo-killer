@@ -13,6 +13,14 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 - Deployed as `gh-pages` commit `419d8b91d0de9103af038ef19415dfbbf3106fe0`; the manually triggered legacy Pages build reported `built` for that exact commit. All ten live production files returned HTTP 200 and matched local `dist` byte-for-byte. Changed CSV module SHA-256: `5559d5a3dfcb2e385c1c13f87e48646a065949102764c21eb07edabb1119e38a`.
 - GitHub Actions CI did not run and is not claimed green because of the known account billing lock. No published history was rewritten and no real financial data was used.
 
+### Reject mixed date separators — 22:57 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- The first attempt, `fix/csv-header-collisions` commit `29b60bb`, was independently rejected before publication: `parseCsv` already trimmed every field, so the proposed change was behaviorally redundant. The replacement rejects mixed date separators such as `2025/03-04` and `04/03-2025`, which `main` previously accepted.
+- Implemented in `d35334c3c5ae7a6fe11172fed022900dd7715120`; merged normally to `main` as `194647e648f3bc1ef1eb655a225fad28d9f6c5cf`. Independent Codex review found no actionable issue. Verification passed: 34/34 Node tests, production build, network-silence across ten production files, `git diff --check`, and README contract checks. No UI changed.
+- Deployed as `gh-pages` commit `8396695eeaa769a3b5ca73687bee47c14aed45e8`; the manually triggered legacy Pages build reported built for that exact commit. All ten live files returned HTTP 200 and matched local `dist` byte-for-byte. Live CSV SHA-256: `d89a121f0525b53f7f771c4fff2dd439532fa0546c062b0d33cea40fa73fd02e`.
+- GitHub Actions did not run and is not claimed green because of the known billing lock. No published history was rewritten.
+
 ### Tolerate one missed billing period — 12:23 Europe/Paris
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
