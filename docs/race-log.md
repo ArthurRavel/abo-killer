@@ -8,9 +8,9 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
 - Replaced the three-error preview with a collapsible disclosure that lists every skipped CSV row and its reason, so malformed rows cannot disappear behind a count during the mandatory transaction review. Imported row labels and error text are HTML-escaped.
-- Implemented in ; merged to  as . Independent verification passed: 28/28 Node tests, production build, ten-file network-silence scan, , and Impeccable detector with zero findings. Codex review against  found no regression.
+- Implemented in `34448fdfa0a8a071deb3de4c002b34cfb74cf6a0`; merged to `main` as `fbdf06bceb241817db522757dd4df180c9ea74cb`. Independent verification passed: 28/28 Node tests, production build, ten-file network-silence scan, `git diff --check`, and Impeccable detector with zero findings. Codex review against `main` found no regression.
 - Real-browser QA with a synthetic CSV confirmed all four skipped rows and reasons on desktop and 390×844 mobile, including date, currency, amount, and missing-description errors. No real financial data was used.
-- Deployed as ; legacy Pages build  reported  for that exact commit. All ten live production files matched local  byte-for-byte. New import disclosure SHA-256: ; live main module SHA-256: .
+- Deployed as `054581749d8da2b3f46432c5c47f774a5b432753`; legacy Pages build `1361685877` reported `built` for that exact commit. All ten live production files matched local `dist` byte-for-byte. New import disclosure SHA-256: `1954f96744d6fda4a6146bd9b5a7c7c3acb62b3210ceef4ca3823b2514a55edc`; live main module SHA-256: `2836e782c2321995ffd8719e38f5d09972acfb5fbc8b92f8794184f7854a9a99`.
 - A live-browser import confirmed the deployed disclosure contains the same four synthetic row errors. GitHub Actions CI is not claimed green because of the known billing lock. No published history was rewritten.
 
 ## 2026-11-11
