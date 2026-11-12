@@ -111,6 +111,12 @@ test("rejects malformed quoted input", () => {
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,too,few,columns'), /row 2 has 4 columns; expected 3/);
 });
 
+test("accepts 100,000 transaction rows and rejects the next row", () => {
+  const csv = `date,description,amount\n${"2025-01-01,Example,-1\n".repeat(100_000)}`;
+  assert.equal(parseCsv(csv).rows.length, 100_000);
+  assert.throws(() => parseCsv(`${csv}2025-01-02,Example,-1\n`), /100,000 transaction limit/);
+});
+
 test("rejects date cells with trailing corruption while accepting complete date formats", () => {
   assert.equal(parseDate("2025-03-04"), "2025-03-04");
   assert.equal(parseDate("2025-03-04T12:30:00Z"), "2025-03-04");
