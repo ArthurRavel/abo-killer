@@ -4,6 +4,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-12
 
+### Tolerate one missed billing period — 12:23 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- A recurring cadence can survive one observed gap spanning two billing periods only when direct ordinary intervals establish and outnumber inferred missed periods. Result evidence discloses the doubled interval. Longer gaps, repeated doubled gaps, and ambiguous fortnightly/monthly overlap are rejected or resolved conservatively.
+- Implemented in `97a0cd8555e633c5000b8232a37380197a9d0943`, with correctness follow-up `72692f92843feb069da9d026cf6d222f228ebbc2`; merged to `main` as `6f0b8bdd789316d82a83e98a230bb213e02e4069`. Review caught that the initial implementation could prefer a shorter doubled cadence and allow too many inferred misses; the follow-up fixed both before merge and added adversarial synthetic coverage.
+- Verification passed: 33/33 Node tests, production build, network-silence across ten production files, `git diff --check`, and README contract checks for the race banner, Rewindary link and star badges, demo GIF, and exact final AI disclosure. npm is unavailable in the service shell, so configured commands ran directly with `/usr/bin/node`; this was not a product failure.
+- Deployed as `gh-pages` commit `76274787d1bfea1ac4694ca7ce503a21b000cbff`; manually triggered legacy Pages build `1362972975` reported built for that exact commit. All ten live production files returned HTTP 200 and matched local `dist` byte-for-byte. Changed recurrence module SHA-256: `c642b91ce23db6efa634b3334d3337986f5ae123c592b2c18c8023a75126a2fe`.
+- Live real-browser synthetic demo completed transaction review and produced three monthly candidates: Cloud Nine Studio, Netflix, and Spotify. No real financial data was used. GitHub Actions CI did not run and is not claimed green because of the known account billing lock. No published history was rewritten.
+
 ### Keep exported summaries downloadable — 07:07 Europe/Paris
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
