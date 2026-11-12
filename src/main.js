@@ -348,7 +348,7 @@ function exportSummary() {
   link.href = url;
   link.download = `abo-killer-summary-${new Date().toISOString().slice(0, 10)}.json`;
   link.click();
-  URL.revokeObjectURL(url);
+  window.setTimeout(() => URL.revokeObjectURL(url), 1000);
   announce("Privacy-safe summary exported.");
 }
 
