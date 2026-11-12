@@ -9,6 +9,7 @@ const DESCRIPTION_COLUMNS = [
 ];
 const AMOUNT_COLUMNS = ["amount", "amount (eur)", "transaction amount", "value"];
 const CURRENCY_COLUMNS = ["currency", "original currency"];
+const MAX_TRANSACTION_ROWS = 100_000;
 
 export const ADAPTERS = [
   {
@@ -82,6 +83,19 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
   let quoted = false;
   let closedQuote = false;
 
+  function pushRow() {
+    row.push(field.trim());
+    if (row.some(Boolean)) {
+      if (rows.length > 0 && rows.length - 1 >= MAX_TRANSACTION_ROWS) {
+        throw new Error(`The CSV exceeds the ${MAX_TRANSACTION_ROWS.toLocaleString("en")} transaction limit.`);
+      }
+      rows.push(row);
+    }
+    row = [];
+    field = "";
+    closedQuote = false;
+  }
+
   for (let index = 0; index < input.length; index += 1) {
     const char = input[index];
     if (quoted) {
@@ -102,18 +116,10 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
       field = "";
       closedQuote = false;
     } else if (char === "\n") {
-      row.push(field.trim());
-      if (row.some(Boolean)) rows.push(row);
-      row = [];
-      field = "";
-      closedQuote = false;
+      pushRow();
     } else if (char === "\r") {
       if (input[index + 1] === "\n") index += 1;
-      row.push(field.trim());
-      if (row.some(Boolean)) rows.push(row);
-      row = [];
-      field = "";
-      closedQuote = false;
+      pushRow();
     } else {
       field += char;
       closedQuote = false;
@@ -121,8 +127,7 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
   }
 
   if (quoted) throw new Error("The CSV ends inside a quoted field.");
-  row.push(field.trim());
-  if (row.some(Boolean)) rows.push(row);
+  pushRow();
   if (rows.length < 2) throw new Error("The CSV needs a header and at least one transaction.");
 
   const [headers, ...data] = rows;
