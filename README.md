@@ -31,6 +31,7 @@ The app does not upload transactions, use analytics, create accounts, persist ra
 - Curated cancellation guides for recognized providers.
 - A privacy-safe JSON export with aggregates only.
 - A production Content Security Policy with `connect-src 'none'`.
+- CSV imports are limited to 10 MB and 100,000 transaction rows.
 
 PDF import is not enabled in this baseline. Reliable client-side extraction needs more adversarial text-layer fixtures; scanned PDFs would still require OCR. The app rejects PDFs clearly instead of pretending to parse them safely.
 
@@ -69,7 +70,7 @@ Common non-subscription descriptions—salary, transfers, cash, tax, rent, mortg
 | Raw-data persistence | Transactions live in JavaScript memory only; no local/session storage, IndexedDB, service worker, or cookies. | Browser memory can remain until the tab is closed or reset. |
 | Third-party resources | No CDN, remote font, analytics script, or remote image is loaded by the app. | README star badges are loaded by GitHub, not by the app. |
 | External cancellation pages | Links are curated and open only after an explicit click with `noreferrer noopener`. | The destination site has its own privacy policy and can change after review. |
-| CSV content injection | Imported values are escaped before entering HTML; exports are JSON rather than spreadsheet formulas. | Very large or intentionally pathological files are limited to 10 MB but may still consume local CPU. |
+| CSV content and resource use | Imported values are escaped before entering HTML; imports are limited to 10 MB and 100,000 rows. | Large files may still consume local CPU. |
 | Misclassification | Conservative deterministic rules, visible confidence/evidence, and review before totals. | Users must make the final judgment; merchant text alone cannot prove a legal subscription. |
 | Currency conversion | Totals remain separated by currency. | There is no combined portfolio total across currencies. |
 
