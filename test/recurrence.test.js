@@ -58,6 +58,25 @@ test("does not infer recurrence across gaps longer than two billing periods", ()
   assert.deepEqual(detectRecurring(rows), []);
 });
 
+test("does not label a regular fortnightly pattern as weekly", () => {
+  const rows = ["2025-01-01", "2025-01-15", "2025-01-29", "2025-02-12"]
+    .map((date) => transaction(date, "Cloud Nine Studio", -24));
+  assert.deepEqual(detectRecurring(rows), []);
+});
+
+test("does not treat repeated 60-day gaps as missed monthly charges", () => {
+  const rows = ["2025-01-01", "2025-03-02", "2025-05-01", "2025-06-30"]
+    .map((date) => transaction(date, "Cloud Nine Studio", -24));
+  assert.deepEqual(detectRecurring(rows), []);
+});
+
+test("prefers quarterly cadence over a doubled monthly window at 76 days", () => {
+  const rows = ["2025-01-01", "2025-03-18", "2025-06-02", "2025-08-17"]
+    .map((date) => transaction(date, "Cloud Nine Studio", -24));
+  const [match] = detectRecurring(rows);
+  assert.equal(match.frequency, "quarterly");
+});
+
 test("same-day duplicates cannot manufacture enough recurrence evidence", () => {
   const rows = [
     transaction("2025-01-05", "Cloud Nine Studio", -24),

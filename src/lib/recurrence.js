@@ -55,13 +55,17 @@ function classifyCadence(dates) {
       return null;
     });
     const matching = normalizedIntervals.filter(Boolean).length;
-    if (!matching) return null;
+    const directMatches = normalizedIntervals.filter((interval) => interval?.periods === 1).length;
+    const missedPeriods = normalizedIntervals.filter((interval) => interval?.periods === 2).length;
+    // Doubled gaps are only credible as missed charges when ordinary gaps
+    // establish this cadence and outnumber the inferred misses.
+    if (!directMatches || missedPeriods >= directMatches) return null;
     const typicalGap = median(normalizedIntervals.filter(Boolean).map(({ normalized }) => normalized));
     return {
       ...cadence,
       typicalGap,
       intervalConsistency: matching / intervals.length,
-      missedPeriods: normalizedIntervals.filter((interval) => interval?.periods === 2).length,
+      missedPeriods,
       matching,
     };
   }).filter(Boolean);
