@@ -4,6 +4,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-12
 
+### Keep exported summaries downloadable — 07:07 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Delayed revocation of the temporary JSON object URL by one second after the browser starts the download. Immediate revocation can race the browser download lifecycle; the URL is still cleaned up automatically.
+- Implemented in `33f8833690d1f25b4ab824a5d2d535321b7466a0`; merged to `main` as `816386dd0ec663612b0d23b3d9541fb76da8404d`. Independent verification passed: 28/28 Node tests, production build, ten-file network-silence scan, `git diff --check`, and README contract checks. Codex review against `main` found no actionable issue.
+- Real-browser QA ran the complete synthetic demo and exported the 961-byte aggregate-only summary. Instrumentation confirmed the object URL remained live when the click began and was revoked by the delayed cleanup on both the local build and deployed app.
+- Deployed as `2de093aaee22a68357f9532597a182ea288a0360`; legacy Pages build `1362309346` reported `built` for that exact commit. All ten live production files matched local `dist` byte-for-byte; live main module SHA-256: `e9786e0699b3b28f60dcc6e08e7b8c0944ef9a35d0a4f6b9e2d2882563fd75c3`.
+- GitHub Actions CI is not claimed green because of the known billing lock. No published history was rewritten.
+
 ### Disclose every skipped import row — 01:52 Europe/Paris
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
