@@ -4,6 +4,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-12
 
+### Bound CSV import resource use — 17:44 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Limited CSV parsing to 100,000 transaction rows in addition to the existing 10 MB upload limit. The boundary is explicit: 100,000 rows are accepted and the next row raises a clear error, reducing the risk of local memory exhaustion from files with millions of tiny rows.
+- Implemented in `2e9d270ec3fafe6590bd1721c3d372e36e56fd6f`; merged to `main` as `fb1f0e7e86cb7cce2475448abd4c484af0e969f6`. Codex review against `main` found no actionable issue; no corrective follow-up was required.
+- Verification passed: 34/34 Node tests, production build, network-silence across ten production files, `git diff --check`, exact boundary coverage, README contract checks, and verified noreply commit identity.
+- Deployed as `gh-pages` commit `419d8b91d0de9103af038ef19415dfbbf3106fe0`; the manually triggered legacy Pages build reported `built` for that exact commit. All ten live production files returned HTTP 200 and matched local `dist` byte-for-byte. Changed CSV module SHA-256: `5559d5a3dfcb2e385c1c13f87e48646a065949102764c21eb07edabb1119e38a`.
+- GitHub Actions CI did not run and is not claimed green because of the known account billing lock. No published history was rewritten and no real financial data was used.
+
 ### Tolerate one missed billing period — 12:23 Europe/Paris
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs.
