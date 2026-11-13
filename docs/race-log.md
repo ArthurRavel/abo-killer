@@ -4,6 +4,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-13
 
+### Handle large merchant histories — 09:26 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Replaced spread-based `Math.min`/`Math.max` calls in recurrence analysis with a bounded iteration, preventing JavaScript argument-limit crashes when a large import contains tens of thousands of charges for one merchant.
+- Implemented in `fbccfc43c42bdf694c2027e3edf7f9a5eff2a291`; merged normally to `main` as `87a966a92fe33d4c03cecb9ff0d6bb3f35291c14`. Codex review found no actionable issue.
+- Verification passed: 36/36 Node tests, including a 66,000-row synthetic regression case; production build; ten-file network-silence scan; `git diff --check`; README contract checks; and verified noreply commit identity. No UI source changed.
+- Deployed as `ab508deaa16bb36df5141b680a6aa8f3d9c1f9a4`; manually triggered legacy Pages build `1365659154` reported built for that exact commit. All ten live production files returned HTTP 200 and matched local `dist` byte-for-byte. Changed recurrence module SHA-256: `fabbaec1615972e453cd461c533ecf91786f0544ada8a15a6aefc967b806ffbd`.
+- GitHub Actions did not run and is not claimed green because of the known billing lock. No published history was rewritten and no real financial data was used.
+
 ### Reject amounts without safe cent precision — 04:14 Europe/Paris
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary 0 stars, 0 forks, 0 open issues, and 0 open PRs.
