@@ -4,6 +4,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-13
 
+### Show annual cost before confirmation — 14:44 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Candidate review now shows each recurring charge's estimated annual cost before confirmation, alongside its expected per-period amount. This keeps the total withheld until review while exposing the long-term impact needed for the decision.
+- Implemented in `4ca1b4ee61a8dc3fbf1b453fb7c616d6bd35f928`; merged normally to `main` as `188a7e92e6b41a0a65aa0ec9a778618c14262b40`. Codex review and an independent diff review found no actionable issue.
+- Verification passed: 36/36 Node tests, production build, ten-file network-silence scan, `git diff --check`, README and noreply-identity contracts, and Impeccable detector with zero findings. Chromium synthetic-demo QA covered candidate review at 1440, 1024, 768, and 390 px; all three annual estimates rendered without horizontal overflow.
+- Deployed as `6a37eca93e8b52fd5cfa45ff00bf2275fdd533b3`; the manually triggered legacy Pages build reported `built` for that exact commit. All ten live production files returned HTTP 200 and matched local `dist` byte-for-byte. Live main module SHA-256: `30753778e4678c0804fffd7bad2b8a308bce8614714c150fb678dbb9881fc6c6`; stylesheet SHA-256: `c037045b4c9d79c548849ccd8097ca7646a99684068e6a3ac49149298e8175d3`.
+- GitHub Actions did not run and is not claimed green because of the known billing lock. No published history was rewritten and no real financial data was used.
+
 ### Handle large merchant histories — 09:26 Europe/Paris
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary 0 stars, 0 forks, 0 open issues, and 0 open PRs.
