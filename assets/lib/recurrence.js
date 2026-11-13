@@ -108,7 +108,13 @@ export function detectRecurring(transactions) {
 
     const amounts = group.map(({ amount }) => Math.abs(amount));
     const average = amounts.reduce((sum, amount) => sum + amount, 0) / amounts.length;
-    const amountSpread = Math.max(...amounts) - Math.min(...amounts);
+    let minimumAmount = Infinity;
+    let maximumAmount = -Infinity;
+    for (const amount of amounts) {
+      minimumAmount = Math.min(minimumAmount, amount);
+      maximumAmount = Math.max(maximumAmount, amount);
+    }
+    const amountSpread = maximumAmount - minimumAmount;
     const amountVariation = average ? amountSpread / average : 1;
     const provider = findProvider(group[0].merchant);
 
@@ -132,7 +138,7 @@ export function detectRecurring(transactions) {
         : `${Math.round(cadence.intervalConsistency * 100)}% of intervals match the cadence`,
       amountVariation < 0.02
         ? "stable amount"
-        : `amounts range ${formatNumber(Math.min(...amounts))}–${formatNumber(Math.max(...amounts))}`,
+        : `amounts range ${formatNumber(minimumAmount)}–${formatNumber(maximumAmount)}`,
     ];
 
     candidates.push({
