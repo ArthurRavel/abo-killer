@@ -64,6 +64,13 @@ test("normalizes currency codes and reports malformed values as row errors", () 
   assert.deepEqual(result.errors, [{ row: 3, message: "Invalid currency code: EURO" }]);
 });
 
+test("rejects a blank currency cell when a currency column is mapped", () => {
+  const parsed = parseCsv("Date,Description,Amount,Currency\n2025-01-01,Studio,-12.50,EUR\n2025-01-02,Studio,-12.50,");
+  const result = normalizeRows(parsed, { date: "Date", description: "Description", amount: "Amount", currency: "Currency" });
+  assert.deepEqual(result.transactions.map(({ currency }) => currency), ["EUR"]);
+  assert.deepEqual(result.errors, [{ row: 3, message: "Invalid currency code: " }]);
+});
+
 test("parses adversarial European CSV quoting, BOM, CRLF, and embedded delimiters", async () => {
   const text = (await fixture("european-adversarial.csv")).replaceAll("\n", "\r\n");
   const parsed = parseCsv(text);
