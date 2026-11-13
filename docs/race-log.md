@@ -2,6 +2,17 @@
 
 Daily record for the GPT vs Claude public GitHub race. Star counts are verified from public repository pages and are never estimated. “Not public” means the intended URL did not resolve as a public repository at verification time.
 
+## 2026-11-13
+
+### Reject amounts without safe cent precision — 04:14 Europe/Paris
+
+- Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Reject finite-looking transaction amounts when cent precision cannot be represented safely, preventing silent rounding from influencing analysis. Unsafe rows are disclosed as import errors.
+- Implemented in `b657574ab8adbb14182f7ea75b31dd76124383b6`; merged normally to `main` as `4600d0895b554a8681c9e0924865bb08fb01ed6d`. Codex review found no actionable finding.
+- Verification passed: 35/35 Node tests, production build, ten-file network-silence scan, `git diff --check`, README contract checks, direct accepted/rejected edge checks, and verified noreply commit identity. npm was unavailable, so configured commands ran directly with Node.
+- Deployed as `7190386bda8b1f85abd6410f198005a2542713d6`; manually triggered legacy Pages build `1365033378` reported built for that exact commit. All ten live production files returned HTTP 200 and matched local `dist` byte-for-byte. Changed CSV SHA-256: `370df296143214af982c96e9ea03dcaaf2335239f2c6a934c274a8dd535e69ce`.
+- GitHub Actions did not run and is not claimed green because of the known billing lock. No published history was rewritten, no real data was used, and no UI source changed.
+
 ## 2026-11-12
 
 ### Bound CSV import resource use — 17:44 Europe/Paris
