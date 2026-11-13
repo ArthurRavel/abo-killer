@@ -4,6 +4,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-13
 
+### Reject blank mapped currencies — 19:53 Europe/Paris
+
+- Verified score: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Blank cells in explicitly mapped currency columns now produce disclosed row errors instead of silently defaulting to EUR. Imports without a currency column still default to EUR.
+- Implemented in `bcae63454fdce46ea983444e51d15d04d4fe30d8`; merged normally to `main` as `2249fed6f9fcbcf99512926e53a1275e7220aeb0`. Independent Codex review found no actionable issue.
+- Verification passed: 37/37 Node tests, production build, ten-file network-silence scan, `git diff --check`, README contract checks, and verified noreply identity. No UI changed, so browser QA was not applicable.
+- Deployed as `ec1a3a1a8f61442fe43466373c22a1f42f8ee381`; the manually triggered legacy Pages build reported `built` for that exact deploy. All ten live files returned HTTP 200 and matched deployed bytes. Changed CSV SHA-256: `82e58d9998607d72ffac4930a501e320818b9db0fff98807852439ab0b513722`.
+- GitHub Actions did not run and is not claimed green because of the known billing lock. No published history was rewritten and no real data was used.
+
 ### Show annual cost before confirmation — 14:44 Europe/Paris
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary 0 stars, 0 forks, 0 open issues, and 0 open PRs.
