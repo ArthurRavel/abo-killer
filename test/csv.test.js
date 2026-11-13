@@ -104,6 +104,17 @@ test("rejects corrupted amount text instead of deleting unknown characters", () 
   assert.throws(() => parseAmount("(12)-"), /Invalid amount/);
 });
 
+test("rejects amounts whose cent value cannot be represented safely", () => {
+  assert.equal(parseAmount("1000000000000.01"), 1000000000000.01);
+  assert.throws(() => parseAmount("90071992547409.90"), /Invalid amount/);
+  assert.throws(() => parseAmount(-Infinity), /Invalid amount/);
+
+  const parsed = parseCsv("Date,Description,Amount\n2025-01-01,Large charge,90071992547409.90");
+  const result = normalizeRows(parsed, { date: "Date", description: "Description", amount: "Amount" });
+  assert.equal(result.transactions.length, 0);
+  assert.deepEqual(result.errors, [{ row: 2, message: "Invalid amount: 90071992547409.90" }]);
+});
+
 test("rejects malformed quoted input", () => {
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,"broken,-4'), /quoted field/);
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,broken"text,-4'), /quoted field must start/);

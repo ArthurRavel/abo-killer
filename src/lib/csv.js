@@ -11,6 +11,12 @@ const AMOUNT_COLUMNS = ["amount", "amount (eur)", "transaction amount", "value"]
 const CURRENCY_COLUMNS = ["currency", "original currency"];
 const MAX_TRANSACTION_ROWS = 100_000;
 
+function isSafeAmount(value) {
+  return Number.isFinite(value) &&
+    Number.isSafeInteger(Math.round(value * 100)) &&
+    Number.EPSILON * Math.abs(value) < 0.005;
+}
+
 export const ADAPTERS = [
   {
     id: "n26",
@@ -163,7 +169,10 @@ export function suggestMapping(headers) {
 }
 
 export function parseAmount(input) {
-  if (typeof input === "number") return input;
+  if (typeof input === "number") {
+    if (!isSafeAmount(input)) throw new Error(`Invalid amount: ${input}`);
+    return input;
+  }
   let value = String(input ?? "").trim();
   value = value.replace(/^(?:[A-Z]{3}\s+)|(?:\s+[A-Z]{3})$/i, "");
   const negativeParentheses = value.startsWith("(") && value.endsWith(")");
@@ -217,7 +226,7 @@ export function parseAmount(input) {
   value = `${sign}${value}`;
   if (negativeParentheses && sign) throw new Error(`Invalid amount: ${input}`);
   const parsed = Number(value);
-  if (!Number.isFinite(parsed)) throw new Error(`Invalid amount: ${input}`);
+  if (!isSafeAmount(parsed)) throw new Error(`Invalid amount: ${input}`);
   return negativeParentheses ? -Math.abs(parsed) : parsed;
 }
 
