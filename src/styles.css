@@ -421,6 +421,7 @@ td.amount.positive { color: var(--positive); }
 .candidate-price { text-align: right; }
 .candidate-price strong { display: block; font-size: 1.25rem; font-variant-numeric: tabular-nums; }
 .candidate-price span { color: #747b87; font-size: 0.72rem; }
+.candidate-price small { display: block; margin-top: 0.4rem; color: var(--ink-muted); font-size: 0.75rem; font-weight: 700; font-variant-numeric: tabular-nums; }
 details { margin-top: 0.75rem; }
 summary { color: #4e5868; cursor: pointer; font-size: 0.78rem; font-weight: 750; }
 .evidence-list { margin: 0.6rem 0 0; padding-left: 1.2rem; color: #646c79; font-size: 0.78rem; line-height: 1.7; }
