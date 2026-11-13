@@ -43,6 +43,18 @@ test("requires strong evidence for unknown merchants", () => {
   assert.equal(detectRecurring(weak).length, 0);
 });
 
+test("analyzes large single-merchant histories without exceeding argument limits", () => {
+  const rows = Array.from({ length: 66_000 }, (_, index) => transaction(
+    new Date(Date.UTC(2000, 0, 1) + index * 7 * 86_400_000).toISOString().slice(0, 10),
+    "Cloud Nine Studio",
+    -24,
+  ));
+
+  const [match] = detectRecurring(rows);
+  assert.equal(match.name, "Cloud Nine Studio");
+  assert.equal(match.frequency, "weekly");
+});
+
 test("recognizes an otherwise regular monthly pattern with one missed billing period", () => {
   const rows = ["2025-01-05", "2025-02-05", "2025-04-05", "2025-05-05"]
     .map((date) => transaction(date, "Cloud Nine Studio", -24));
