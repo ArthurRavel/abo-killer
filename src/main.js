@@ -281,7 +281,7 @@ function candidateCard(candidate) {
       <div class="candidate-sub"><span class="badge ${candidate.recognized ? "" : "unknown"}">${candidate.recognized ? "Recognized provider" : "Unrecognized merchant"}</span><span>${escapeHtml(candidate.frequencyLabel)}</span><span>${candidate.confidence}% confidence</span></div>
       <details><summary>Why this matched</summary><ul class="evidence-list">${candidate.evidence.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></details>
     </div>
-    <div class="candidate-price"><strong>${escapeHtml(formatMoney(candidate.expectedCharge, candidate.currency))}</strong><span>expected / ${escapeHtml(candidate.frequency)}</span></div>
+    <div class="candidate-price"><strong>${escapeHtml(formatMoney(candidate.expectedCharge, candidate.currency))}</strong><span>expected / ${escapeHtml(candidate.frequency)}</span><small>${escapeHtml(formatMoney(candidate.annualCost, candidate.currency))} estimated / year</small></div>
   </article>`;
 }
 
