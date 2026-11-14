@@ -104,7 +104,7 @@ export function detectRecurring(transactions) {
     if (group.length < 2) continue;
     const cadence = classifyCadence(group.map(({ date }) => date));
     if (!cadence) continue;
-    if (cadence.id !== "annual" && group.length < 3) continue;
+    if (group.length < 3) continue;
 
     const amounts = group.map(({ amount }) => Math.abs(amount));
     const average = amounts.reduce((sum, amount) => sum + amount, 0) / amounts.length;
