@@ -5,6 +5,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-14
 
+### Preserve row exclusions across remapping — 21:46 Europe/Paris
+
+- Verified score: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- User-excluded transaction rows now stay excluded through generic CSV remapping, including temporary invalidation and restoration; newly valid rows default to selected.
+- Implemented in `4a56f0025ecfe506de4ed36571c0f7217c1ba4e5`; merged normally to `main` as `c111816b53dd671100051191bd7e06469123aafb`. Review found no actionable issue.
+- Verification passed: 42/42 Node tests, production build, 11-file network-silence scan, `git diff --check`, README race-contract checks, noreply identity, Impeccable with zero findings, and Chromium QA at 1440, 1024, 768, and 390 px with no overflow.
+- Deployed as `00a5449187b6be21e7eb3fb0eb0ba0574a84d3d8`; the manually triggered legacy Pages build reached `built` for that exact deploy. All 11 live files returned HTTP 200 and matched local `dist` byte-for-byte. Selection module SHA-256: `45473fe26777fee69405b0859ff655028aea2d382c4ec230d7157379feb1c173`; main module SHA-256: `79d80eb951a9b651a99fb7ee8240ab9b503e68355134c6027427d9dea694e2b6`.
+- GitHub Actions is not claimed green because of the known billing lock. No real financial data was used and no history was rewritten.
+
 ### Anonymize unrecognized merchants in exports — 16:31 Europe/Paris
 
 - Verified score: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
