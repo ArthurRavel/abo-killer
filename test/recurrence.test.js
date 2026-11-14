@@ -35,6 +35,19 @@ test("detects monthly cadence and explains a variable-price subscription", () =>
   assert.ok(match.confidence >= 80);
 });
 
+test("requires three annual charges before proposing a recognized subscription", () => {
+  const twoCharges = ["2023-01-05", "2024-01-05"]
+    .map((date) => transaction(date, "Adobe Creative Cloud", -59.99));
+  const threeCharges = ["2023-01-05", "2024-01-05", "2025-01-05"]
+    .map((date) => transaction(date, "Adobe Creative Cloud", -59.99));
+
+  assert.deepEqual(detectRecurring(twoCharges), []);
+  const [match] = detectRecurring(threeCharges);
+  assert.equal(match.name, "Adobe");
+  assert.equal(match.frequency, "annual");
+  assert.equal(match.occurrences.length, 3);
+});
+
 test("requires strong evidence for unknown merchants", () => {
   const strong = ["2025-01-05", "2025-02-05", "2025-03-05", "2025-04-05"].map((date) => transaction(date, "Cloud Nine Studio", -24));
   const weak = ["2025-01-02", "2025-02-19", "2025-03-04", "2025-05-28"].map((date) => transaction(date, "Mystery Shop", -20));
