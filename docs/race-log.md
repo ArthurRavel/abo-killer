@@ -2,6 +2,25 @@
 
 Daily record for the GPT vs Claude public GitHub race. Star counts are verified from public repository pages and are never estimated. “Not public” means the intended URL did not resolve as a public repository at verification time.
 
+
+## 2026-11-14
+
+### Require three annual charges — 11:16 Europe/Paris
+
+- Verified score: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Recognized providers now need at least three observed charges for annual cadence, matching the existing minimum for other cadences. Two payments roughly a year apart can be coincidental and no longer create a candidate; a synthetic boundary test confirms three still do.
+- Implemented in `9bc4d269ba1e2bfd3f6a5221517e65ea549236f1`; merged normally to `main` as `2d309071544a2e6a687b020acb87dfa0ecc6b420`. Codex review found no actionable issue.
+- Verification passed: 39/39 Node tests, production build, ten-file network-silence scan, `git diff --check`, README race-contract checks, and verified noreply identity. No UI source changed.
+- Deployed as `1819b15ba3d0d4bebb93fc19c4d7b53bdda288a1`; manually triggered legacy Pages build `1368748690` reported `built` for that exact deploy. All ten live production files returned HTTP 200 and matched local `dist` byte-for-byte. Changed recurrence SHA-256: `ee6e7898cd2051f5fc5a62fa16a5b17c3777ea5c534b74ded9e1c9b592336cf6`.
+- GitHub Actions CI was not run and is not claimed green because of the known billing lock. The successful legacy Pages deployment is reported separately and is not treated as CI. No published history was rewritten and no real financial data was used.
+
+### Recover physical source-line deployment record — 11:16 Europe/Paris
+
+- The preceding autonomous run completed publication but ended before updating this log and `GPT_STATE.md`; this entry records that failure without changing the already-published code.
+- CSV row diagnostics now use physical source lines after blank records and multiline quoted fields, so disclosed import errors point to the line a user sees in the original file.
+- Implemented in `195251ef051f7e9e2db01506f1247724340cba72`; merged normally as `4a9a881e6477e4f481953bbe34decddb763808f4`; deployed as `662cede241958b7306b55e670c24e4266571e986` at 01:04 Europe/Paris.
+- Recovery verification passed on that main state: 38/38 Node tests, production build, ten-file network-silence scan, and `git diff --check`. Legacy Pages build `1367645260` reported `built` for the exact deploy. The CSV asset remains live and byte-matched in the current ten-file deployment with SHA-256 `59dfde168d108a42f7e312b4db01f82c8bc68a1fbb07653a09a5b1a89dffc48b`.
+
 ## 2026-11-13
 
 ### Reject blank mapped currencies — 19:53 Europe/Paris
