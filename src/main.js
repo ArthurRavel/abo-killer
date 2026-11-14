@@ -3,6 +3,7 @@ import { createSafeSummary, detectRecurring, totalsByCurrency } from "./lib/recu
 import { SAMPLE_CSV, SAMPLE_FILENAME } from "./sample-data.js";
 import { paginate } from "./lib/pagination.js";
 import { renderSkippedRows } from "./lib/import-errors.js";
+import { selectedTransactionIds } from "./lib/selection.js";
 
 const app = document.querySelector("#app");
 const announcer = document.querySelector("#announcer");
@@ -17,6 +18,7 @@ const state = {
   rowErrors: [],
   transactionPage: 0,
   selectedTransactions: new Set(),
+  excludedTransactions: new Set(),
   candidates: [],
   selectedCandidates: new Set(),
 };
@@ -141,6 +143,7 @@ function loadCsv(text, filename) {
     const parsed = parseCsv(text);
     const adapter = detectAdapter(parsed.headers);
     const mapping = adapter?.mapping ?? suggestMapping(parsed.headers);
+    state.excludedTransactions = new Set();
     state.filename = filename;
     state.parsed = parsed;
     state.adapter = adapter;
@@ -159,7 +162,7 @@ function applyMapping() {
     const result = normalizeRows(state.parsed, state.mapping);
     state.transactions = result.transactions;
     state.rowErrors = result.errors;
-    state.selectedTransactions = new Set(state.transactions.map(({ id }) => id));
+    state.selectedTransactions = selectedTransactionIds(state.transactions, state.excludedTransactions);
   } catch (error) {
     state.transactions = [];
     state.rowErrors = [{ row: "—", message: error.message }];
@@ -233,8 +236,13 @@ function bindTransactionReview() {
   document.querySelector("#previous-page")?.addEventListener("click", () => navigatePage(state.transactionPage - 1, "previous-page"));
   document.querySelector("#next-page")?.addEventListener("click", () => navigatePage(state.transactionPage + 1, "next-page"));
   document.querySelectorAll(".transaction-toggle").forEach((checkbox) => checkbox.addEventListener("change", () => {
-    if (checkbox.checked) state.selectedTransactions.add(checkbox.dataset.id);
-    else state.selectedTransactions.delete(checkbox.dataset.id);
+    if (checkbox.checked) {
+      state.excludedTransactions.delete(checkbox.dataset.id);
+      state.selectedTransactions.add(checkbox.dataset.id);
+    } else {
+      state.excludedTransactions.add(checkbox.dataset.id);
+      state.selectedTransactions.delete(checkbox.dataset.id);
+    }
     document.querySelector("#selected-count").textContent = state.selectedTransactions.size;
     document.querySelector("#analyze").disabled = state.selectedTransactions.size === 0;
   }));
@@ -367,6 +375,7 @@ function reset() {
   state.rowErrors = [];
   state.transactionPage = 0;
   state.selectedTransactions = new Set();
+  state.excludedTransactions = new Set();
   state.candidates = [];
   state.selectedCandidates = new Set();
   renderLanding({ focusHeading: true });
