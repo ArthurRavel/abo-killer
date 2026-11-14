@@ -88,6 +88,8 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
   let field = "";
   let quoted = false;
   let closedQuote = false;
+  let line = 1;
+  let rowLine = 1;
 
   function pushRow() {
     row.push(field.trim());
@@ -95,7 +97,7 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
       if (rows.length > 0 && rows.length - 1 >= MAX_TRANSACTION_ROWS) {
         throw new Error(`The CSV exceeds the ${MAX_TRANSACTION_ROWS.toLocaleString("en")} transaction limit.`);
       }
-      rows.push(row);
+      rows.push({ values: row, line: rowLine });
     }
     row = [];
     field = "";
@@ -111,7 +113,16 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
       } else if (char === '"') {
         quoted = false;
         closedQuote = true;
-      } else field += char;
+      } else {
+        field += char;
+        if (char === "\r") {
+          if (input[index + 1] === "\n") {
+            field += "\n";
+            index += 1;
+          }
+          line += 1;
+        } else if (char === "\n") line += 1;
+      }
     } else if (closedQuote && char !== delimiter && char !== "\n" && char !== "\r") {
       throw new Error("Unexpected text after a closing quote.");
     } else if (char === '"') {
@@ -123,9 +134,13 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
       closedQuote = false;
     } else if (char === "\n") {
       pushRow();
+      line += 1;
+      rowLine = line;
     } else if (char === "\r") {
       if (input[index + 1] === "\n") index += 1;
       pushRow();
+      line += 1;
+      rowLine = line;
     } else {
       field += char;
       closedQuote = false;
@@ -136,18 +151,18 @@ export function parseCsv(text, delimiter = detectDelimiter(text)) {
   pushRow();
   if (rows.length < 2) throw new Error("The CSV needs a header and at least one transaction.");
 
-  const [headers, ...data] = rows;
+  const [{ values: headers }, ...data] = rows;
   const uniqueHeaders = new Set(headers.map((header) => header.toLowerCase()));
   if (uniqueHeaders.size !== headers.length) throw new Error("The CSV has duplicate column names.");
-  const invalidRow = data.findIndex((values) => values.length !== headers.length);
-  if (invalidRow >= 0) throw new Error(`CSV row ${invalidRow + 2} has ${data[invalidRow].length} columns; expected ${headers.length}.`);
+  const invalidRow = data.find(({ values }) => values.length !== headers.length);
+  if (invalidRow) throw new Error(`CSV row ${invalidRow.line} has ${invalidRow.values.length} columns; expected ${headers.length}.`);
 
   return {
     delimiter,
     headers,
-    rows: data.map((values, rowIndex) => ({
+    rows: data.map(({ values, line: sourceLine }) => ({
       ...Object.fromEntries(headers.map((header, columnIndex) => [header, values[columnIndex] ?? ""])),
-      __row: rowIndex + 2,
+      __row: sourceLine,
     })),
   };
 }
