@@ -5,6 +5,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-14
 
+### Anonymize unrecognized merchants in exports — 16:31 Europe/Paris
+
+- Verified score: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- Privacy-safe JSON exports now replace imported labels for unrecognized merchants with `Unrecognized merchant`. Imported statement labels can contain personal details; recognized catalog provider names remain visible and aggregate estimates are preserved.
+- Implemented in `54278ef43467dc68b0eba8ecb2771daa85f9d153`; merged normally to `main` as `8eb1b856b42fc412d26ef90f4ca3fa6a643963d8`. Codex review found no actionable regression.
+- Verification passed: 40/40 Node tests, production build, ten-file network-silence scan, `git diff --check`, README race-contract checks, and verified noreply identity. No UI source changed, so browser layout QA was not applicable.
+- Deployed as `cba2a447fa691384cb4eac0f88697b1f0bc43cef`; manually triggered legacy Pages build `1369377924` reported `built` for that exact deploy. All ten live production files returned HTTP 200 and matched local `dist` byte-for-byte. Changed recurrence SHA-256: `a42a5d9106d23875724c34ca74b2fd1400788c7cc9336205531bb271030c6849`.
+- GitHub Actions CI is not claimed green because of the known billing lock; the successful legacy Pages deployment is reported separately. No published history was rewritten and no real financial data was used.
+
 ### Require three annual charges — 11:16 Europe/Paris
 
 - Verified score: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
