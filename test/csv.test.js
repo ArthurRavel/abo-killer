@@ -84,6 +84,13 @@ test("parses adversarial European CSV quoting, BOM, CRLF, and embedded delimiter
   assert.equal(parseAmount(parsed.rows[2].Value), -1234.56);
 });
 
+test("reports physical source lines after blank records and embedded newlines", () => {
+  const parsed = parseCsv('Date,Description,Amount\r\n\r\n2025-01-01,"Studio\r\nNorth",pending\r\n2025-02-01,Studio,-12.50');
+  assert.deepEqual(parsed.rows.map(({ __row }) => __row), [3, 5]);
+  const result = normalizeRows(parsed, { date: "Date", description: "Description", amount: "Amount" });
+  assert.deepEqual(result.errors, [{ row: 3, message: "Invalid amount: pending" }]);
+});
+
 test("parses common European and international amount formats", () => {
   assert.equal(parseAmount("-1.234,56 €"), -1234.56);
   assert.equal(parseAmount("(1,234.56)"), -1234.56);
@@ -127,6 +134,7 @@ test("rejects malformed quoted input", () => {
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,broken"text,-4'), /quoted field must start/);
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,"broken"text,-4'), /after a closing quote/);
   assert.throws(() => parseCsv('date,description,amount\n2025-01-01,too,few,columns'), /row 2 has 4 columns; expected 3/);
+  assert.throws(() => parseCsv('date,description,amount\n\n2025-01-01,too,few,columns'), /row 3 has 4 columns; expected 3/);
 });
 
 test("accepts 100,000 transaction rows and rejects the next row", () => {
