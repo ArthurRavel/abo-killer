@@ -186,7 +186,8 @@ export function createSafeSummary(candidates, generatedAt = new Date().toISOStri
     note: "Aggregated estimates only. No raw transaction descriptions, dates, balances, or account details are included.",
     totals: totalsByCurrency(candidates),
     subscriptions: candidates.map((candidate) => ({
-      name: candidate.name,
+      // Unknown names originate in imported merchant text and may contain personal details.
+      name: candidate.recognized ? candidate.name : "Unrecognized merchant",
       recognizedProvider: candidate.recognized,
       currency: candidate.currency,
       frequency: candidate.frequency,

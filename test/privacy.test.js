@@ -22,6 +22,22 @@ test("privacy-safe export contains aggregates, not raw transaction fields", () =
   assert.doesNotMatch(output, /884421|2025-01-03|occurrences|merchant/);
 });
 
+test("privacy-safe export omits imported names for unrecognized merchants", () => {
+  const summary = createSafeSummary([{
+    name: "Private Therapy Arthur Ravel",
+    recognized: false,
+    currency: "EUR",
+    frequency: "monthly",
+    expectedCharge: 80,
+    annualCost: 960,
+    confidence: 82,
+    occurrences: [{ date: "2025-01-03", amount: -80 }],
+  }]);
+  const output = JSON.stringify(summary);
+  assert.match(output, /Unrecognized merchant/);
+  assert.doesNotMatch(output, /Private Therapy|Arthur Ravel/);
+});
+
 test("browser source does not persist or transmit imported data", async () => {
   const files = ["../src/main.js", "../src/lib/csv.js", "../src/lib/recurrence.js"];
   const source = (await Promise.all(files.map((file) => readFile(new URL(file, import.meta.url), "utf8")))).join("\n");
