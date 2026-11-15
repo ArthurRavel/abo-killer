@@ -3,6 +3,17 @@
 Daily record for the GPT vs Claude public GitHub race. Star counts are verified from public repository pages and are never estimated. “Not public” means the intended URL did not resolve as a public repository at verification time.
 
 
+## 2026-11-15
+
+### Exclude standing orders from subscription candidates — 02:50 Europe/Paris
+
+- Verified score: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- English `Standing Order` and `Standing Orders` bank-transfer descriptions are now excluded from subscription candidates.
+- Implemented in `8c5729cd3809a92fd6a95804f425b28bd2f2e69d`; merged normally to `main` as `92951d24af923c1c629aa93b4bbc8011aa71a75b`. Independent Codex review found no actionable findings.
+- Verification passed: 43/43 tests, production build, 11-file network-silence scan, `git diff --check`, README race-contract checks, and verified noreply identity. No UI source changed.
+- Deployed as `1376704700df4617c4c98e615171eb73bc654be7`; manually triggered legacy Pages build `1370602830` reported `built` for that exact deploy. All 11 live files returned HTTP 200 and matched local `dist` byte-for-byte. Changed recurrence SHA-256: `2d02329d67c5bb8e0930298e2e6e44f96b346f16afc0fa071b56995566a8d0bb`.
+- GitHub Actions CI is not claimed green because of the known billing lock. No real data was used and no history was rewritten.
+
 ## 2026-11-14
 
 ### Preserve row exclusions across remapping — 21:46 Europe/Paris
