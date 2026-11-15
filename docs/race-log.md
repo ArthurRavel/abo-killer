@@ -5,6 +5,15 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 
 ## 2026-11-15
 
+### Keep the latest import selection — 13:20 Europe/Paris
+
+- Verified score: Abo Killer and Rewindary each had 0 stars, 0 forks, 0 open issues, and 0 open PRs.
+- File import is now last-selection-wins: an older asynchronous CSV read cannot overwrite a newer file, synthetic demo, reset, or error state. Stale read failures are ignored as well.
+- Implemented in `5b24277dd519835e332efb686bdd6a95cbee3cac`; merged normally to `main` as `7cdb797af5a7547d558bced3cd91fd4da4006a74`. Independent Codex review caught and corrected missing invalidation for the demo and reset actions before publication.
+- Verification passed: 46/46 Node tests, production build, 12-file network-silence scan, `git diff --check`, README race-contract checks, and verified noreply identity. The regression tests were proven to fail when stale reads were deliberately treated as current. No visual layout changed; full browser event-flow automation remains a verification limit.
+- Deployed as `2f5929f3fd0e2ca27037ef8d93ef5f4664e7d572`; manually triggered legacy Pages build `1371745368` reported `built` for that exact deploy. All 12 live production files returned HTTP 200 and matched local `dist` byte-for-byte. Request gate SHA-256: `696d5b33121dc0fda3f36741879ea0a43e0581825b9e325368c073edfe1b1474`; main module SHA-256: `e41a39647c9de5966f22e968949b3f1e6ee6a14a26296fa49d9bca47f913b460`.
+- GitHub Actions CI is not claimed green because of the known billing lock. No real financial data was used and no published history was rewritten.
+
 ### Require exact provider aliases — current cycle
 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary 0 stars, 0 forks, 0 open issues, and 0 open PRs.
