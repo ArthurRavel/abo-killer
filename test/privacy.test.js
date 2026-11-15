@@ -2,7 +2,7 @@ import assert from "node:assert/strict";
 import { readFile } from "node:fs/promises";
 import test from "node:test";
 import { createSafeSummary } from "../src/lib/recurrence.js";
-import { PROVIDERS } from "../src/lib/providers.js";
+import { findProvider, PROVIDERS } from "../src/lib/providers.js";
 
 test("privacy-safe export contains aggregates, not raw transaction fields", () => {
   const summary = createSafeSummary([{
@@ -56,4 +56,11 @@ test("provider catalog only contains explicit HTTPS help destinations", () => {
     assert.equal(url.protocol, "https:");
     assert.ok(allowedHosts.has(url.hostname), `${provider.name} uses an unexpected host`);
   }
+});
+
+test("provider links require an exact normalized merchant alias", () => {
+  assert.equal(findProvider("netflix com").name, "Netflix");
+  assert.equal(findProvider("google storage").name, "Google subscriptions");
+  assert.equal(findProvider("netflix com billing help"), undefined);
+  assert.equal(findProvider("google storage support"), undefined);
 });
