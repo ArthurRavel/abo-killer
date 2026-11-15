@@ -4,9 +4,11 @@ import { SAMPLE_CSV, SAMPLE_FILENAME } from "./sample-data.js";
 import { paginate } from "./lib/pagination.js";
 import { renderSkippedRows } from "./lib/import-errors.js";
 import { selectedTransactionIds } from "./lib/selection.js";
+import { createRequestGate } from "./lib/request-gate.js";
 
 const app = document.querySelector("#app");
 const announcer = document.querySelector("#announcer");
+const fileReadGate = createRequestGate();
 
 const state = {
   phase: "landing",
@@ -106,7 +108,10 @@ function bindLanding() {
   const input = document.querySelector("#file-input");
   const dropZone = document.querySelector("#drop-zone");
   document.querySelector("#choose-file").addEventListener("click", () => input.click());
-  document.querySelector("#use-demo").addEventListener("click", () => loadCsv(SAMPLE_CSV, SAMPLE_FILENAME));
+  document.querySelector("#use-demo").addEventListener("click", () => {
+    fileReadGate.begin();
+    loadCsv(SAMPLE_CSV, SAMPLE_FILENAME);
+  });
   input.addEventListener("change", () => input.files[0] && readFile(input.files[0]));
   ["dragenter", "dragover"].forEach((eventName) => dropZone.addEventListener(eventName, (event) => {
     event.preventDefault();
@@ -123,6 +128,7 @@ function bindLanding() {
 }
 
 async function readFile(file) {
+  const request = fileReadGate.begin();
   if (!file.name.toLowerCase().endsWith(".csv")) {
     renderError("Unsupported file", "This baseline accepts CSV files. PDF is deliberately not enabled until text extraction can be tested reliably; scanned PDFs will remain unsupported.");
     return;
@@ -132,9 +138,10 @@ async function readFile(file) {
     return;
   }
   try {
-    loadCsv(await file.text(), file.name);
+    const text = await file.text();
+    fileReadGate.runIfCurrent(request, () => loadCsv(text, file.name));
   } catch (error) {
-    renderError("Could not read that file", error.message);
+    fileReadGate.runIfCurrent(request, () => renderError("Could not read that file", error.message));
   }
 }
 
@@ -367,6 +374,7 @@ function renderError(title, message) {
 }
 
 function reset() {
+  fileReadGate.begin();
   state.filename = "";
   state.parsed = null;
   state.adapter = null;
