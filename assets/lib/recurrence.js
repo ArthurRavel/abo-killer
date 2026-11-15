@@ -2,7 +2,7 @@ import { findProvider } from "./providers.js";
 
 const PROCESSOR_PREFIXES = /^(?:paypal\s*\*|pp\s*\*|sumup\s*\*|stripe\s*\*|adyen\s*\*|sq\s*\*)/i;
 const NOISE_WORDS = new Set(["card", "payment", "purchase", "pos", "direct", "debit", "sepa", "eu"]);
-const EXCLUDED = /\b(?:salary|payroll|transfer|cash|atm|withdrawal|tax|rent|mortgage|insurance|loan|credit card|card repayment|grocery|supermarket|fuel|restaurant)\b/i;
+const EXCLUDED = /\b(?:salary|payroll|transfer|standing orders?|cash|atm|withdrawal|tax|rent|mortgage|insurance|loan|credit card|card repayment|grocery|supermarket|fuel|restaurant)\b/i;
 
 export function normalizeMerchant(input) {
   return String(input ?? "")
