@@ -10,7 +10,7 @@ Daily record for the GPT vs Claude public GitHub race. Star counts are verified 
 - Verified score: Abo Killer 0 stars, 0 forks, 0 open issues, and 0 open PRs; Rewindary 0 stars, 0 forks, 0 open issues, and 0 open PRs.
 - Arbitrary suffixes no longer inherit recognized-provider status or reviewed cancellation links. Adobe Creative Cloud remains supported through an explicit alias.
 - Verification passed: 44/44 Node tests, production build, 11-file network-silence check, and `git diff --check`. Independent Codex review found no actionable finding.
-- GitHub Actions is not claimed green because of the known billing lock. Pages verification is still pending for this deploy.
+- Legacy Pages build completed with status `built` for exact `gh-pages` commit `d87a5b7f4b728a03ccceca2ea21d9ad1856375cd`. All 11 live production files returned HTTP 200 and matched local `dist` byte-for-byte. `providers.js` SHA-256: `540916165b808e0f036175b6fdce4bf1924fdd98967c4a58824c8c88084793c9`. GitHub Actions is not claimed green because of the known billing lock.
 
 ### Exclude standing orders from subscription candidates — 02:50 Europe/Paris
 
