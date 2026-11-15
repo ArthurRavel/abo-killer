@@ -60,7 +60,7 @@ Open `http://localhost:4173`, choose **Try synthetic demo**, and walk through th
 6. Require at least three occurrences for most known monthly patterns and four with stronger consistency for unknown merchants.
 7. Show the evidence and wait for the user to confirm what should count.
 
-Common non-subscription descriptions—salary, transfers, cash, tax, rent, mortgage, loans, insurance, groceries, fuel, and restaurants—are excluded before grouping. This is intentionally conservative, but no heuristic eliminates every false positive or false negative.
+Common non-subscription descriptions—salary, transfers, standing orders, cash, tax, rent, mortgage, loans, insurance, groceries, fuel, and restaurants—are excluded before grouping. This is intentionally conservative, but no heuristic eliminates every false positive or false negative.
 
 ## Privacy and threat model
 
@@ -100,7 +100,7 @@ The synthetic test suite covers:
 - merchant normalization;
 - cadence and variable prices;
 - unknown-merchant evidence thresholds;
-- transfer, salary, grocery, and incoming-payment false positives;
+- transfer, standing-order, salary, grocery, and incoming-payment false positives;
 - per-currency totals;
 - aggregate-only export privacy;
 - absence of network and persistent-storage APIs;

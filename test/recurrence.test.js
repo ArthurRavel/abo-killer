@@ -139,6 +139,15 @@ test("excludes transfers, salary, groceries, and incoming money", () => {
   assert.deepEqual(detectRecurring(rows), []);
 });
 
+test("excludes recurring standing orders to personal payees", () => {
+  const rows = [
+    ...["2025-01-01", "2025-02-01", "2025-03-01", "2025-04-01"].map((date) => transaction(date, "Standing Order to Alex Morgan", -850)),
+    ...["2025-01-03", "2025-02-03", "2025-03-03", "2025-04-03"].map((date) => transaction(date, "Standing Orders: Family Support", -120)),
+  ];
+
+  assert.deepEqual(detectRecurring(rows), []);
+});
+
 test("keeps currencies separate when calculating totals", () => {
   const candidates = [
     { currency: "EUR", annualCost: 120 },
