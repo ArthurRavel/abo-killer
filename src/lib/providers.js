@@ -16,7 +16,7 @@ export const PROVIDERS = [
   {
     id: "adobe",
     name: "Adobe",
-    aliases: ["adobe", "adobe systems"],
+    aliases: ["adobe", "adobe systems", "adobe creative cloud"],
     cancelUrl: "https://helpx.adobe.com/manage-account/using/cancel-subscription.html",
     linkLabel: "Adobe cancellation guide",
   },
@@ -59,8 +59,6 @@ export const PROVIDERS = [
 
 export function findProvider(normalizedMerchant) {
   return PROVIDERS.find((provider) =>
-    provider.aliases.some(
-      (alias) => normalizedMerchant === alias || normalizedMerchant.startsWith(`${alias} `),
-    ),
+    provider.aliases.some((alias) => normalizedMerchant === alias),
   );
 }
